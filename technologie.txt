@@ -1,0 +1,8 @@
+python - język progr.
+PySide6 - QT GUI
+matplotlib - wyświetlanie wykresów i wyrażeń matematycznych
+
+Obliczanie ???
+numpy?
+Może są biblioteki do automatycznego obliczania?
+Potrzebne też parsowanie tekstu
