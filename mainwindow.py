@@ -2,6 +2,7 @@
 import sys
 
 from PySide6.QtWidgets import QApplication, QMainWindow
+import importlib as imp
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -15,8 +16,23 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+def checklibs():
+    pkgs = ['PySide6', 'matplotlib'] # later 'numpy' will join the list
+    ihaveall = True
+    for p in pkgs:
+        try:
+            imp.import_module(p)
+        except(ImportError):
+            print('Nie zainstalowano', p)
+            ihaveall = False
+    if not ihaveall:
+        print('Nalezy je doinstalowac zeby program dzialal, np. za pomoca pip')
+        return False
+    return True
 
 if __name__ == "__main__":
+    if not checklibs():
+        sys.exit(1)
     app = QApplication(sys.argv)
     widget = MainWindow()
     widget.show()
