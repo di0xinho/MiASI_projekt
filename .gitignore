@@ -1,0 +1,29 @@
+# Asked chatGPT to generate .gitignore for SIMPLE python project.
+#  Got really dissapointed, it started spliting random file formats to ignore.
+#  I just wanted to exclude __pycache__/ !
+
+# qtcreator generated files
+*.pro.user*
+
+*.vcproj
+*vcproj.*.*.user
+*.vcxproj
+*vcxproj.*
+
+# Python byte code
+*.pyc
+
+# Binaries
+*.dll
+*.exe
+
+.vscode/settings.json
+
+# AI didn't come up with this:
+__pycache__/
+pycache/
+*.user
+
+# I'm wondering if I should ignore:
+form.ui
+*.pyproject

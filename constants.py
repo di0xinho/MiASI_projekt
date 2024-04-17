@@ -1,0 +1,2 @@
+
+MAINFILE = 'MainWindow.py'
