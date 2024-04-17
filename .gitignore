@@ -5,11 +5,6 @@
 # qtcreator generated files
 *.pro.user*
 
-*.vcproj
-*vcproj.*.*.user
-*.vcxproj
-*vcxproj.*
-
 # Python byte code
 *.pyc
 
@@ -24,6 +19,5 @@ __pycache__/
 pycache/
 *.user
 
-# I'm wondering if I should ignore:
 form.ui
 *.pyproject
