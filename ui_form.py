@@ -22,8 +22,16 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QMainWindow, QMenuBar,
     QTabWidget, QWidget,
     QLabel, QHBoxLayout, QVBoxLayout)
 
-# TODO there's still a mess here, fix it
-# TODO fix ui by adding h... or v... ...BoxLayouts
+from graphlayout import GraphLayout
+
+# historyScroll and functionScroll will contain dynamically set Widgets with GraphLayout
+
+# FIXME The GraphLayout ignores proportions. For now I don't know how.
+
+# TODO put tab1 and tab2 setups in separate files.
+
+# TODO GraphLayout can be GraphWidget instead of wrapping GraphLayout in additional widget every time.
+
 
 class Ui_MainWindow(object):
     window_w = 800
@@ -57,25 +65,8 @@ class Ui_MainWindow(object):
         # tab widget
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
-        #self.tabWidget.setContentsMargins(0,0,0,0)
-        #self.tabWidget.setGeometry(QRect(90, 110, 551, 371)) # this works
         self.tabWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         MainWindow.setCentralWidget(self.tabWidget)
-
-
-        # temporary
-        # self.tab = QWidget()
-        # self.tabWidget.addTab(self.tab, "TAB 1")
-        # self.tab.setContentsMargins(0,0,0,0)
-        # self.layoutToMakeTabsWork = QHBoxLayout()
-        # self.tab.setLayout(self.layoutToMakeTabsWork) # there needs to be at least 1 layout in tabwidget's sub widgets
-        # self.tab2 = QWidget()
-        # self.tabWidget.addTab(self.tab2, "TAB 2")
-        # self.lab1 = QLabel(self.tab)
-        # self.lab1.setText("Elo, label 1")
-        # self.tab1HLayout.addWidget(self.lab1)
-        # self.lab2 = QLabel(self.tab2)
-        # self.lab2.setText("Elo, label 2")
 
         self.setupTab1()
         self.setupTab2()
@@ -147,26 +138,36 @@ class Ui_MainWindow(object):
         self.tab1.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.tab1Layout = QGridLayout()
         self.tab1.setLayout(self.tab1Layout)
-        # TODO set nof columns and rows for tab1Layout. For now assume 8x6
+        # nof columns and rows for tab1Layout. For now assume 8x6
 
-        # Where formulas will be typed. This will be replaced by matplotlib widget.
+        # Widget to hold GraphLayout
         self.formulaWidget = QWidget()
-        self.formulaWidget.setObjectName(u"widget")
+        self.formulaWidget.setObjectName(u"formulaWidget")
+        self.formulaWidget.setStyleSheet("QWidget#formulaWidget { border: 1px solid black; }")
         self.tab1Layout.addWidget(self.formulaWidget, 0, 0, 2, 5) # row, column, rowSpan, columnSpan. For some reason positional arguments don't work here
+        # GraphLayout for input
+        self.mathFormula = GraphLayout(True)
+        self.mathFormula.formulaExample()
+        self.formulaWidget.setLayout(self.mathFormula.getLayout())
 
         # Where answer will be displayed. This will be replaced by matplotlib widget.
         self.answerWidget = QWidget()
-        self.answerWidget.setObjectName(u"widget_2")
+        self.answerWidget.setObjectName(u"answerWidget")
+        self.formulaWidget.setStyleSheet("QWidget#answerWidget { border: 1px solid black; }")
         self.tab1Layout.addWidget(self.answerWidget, 2, 0, 1, 5) # row, column, rowSpan, columnSpan.
+        # GraphLayout for results
+        self.answerFormula = GraphLayout(True)
+        self.answerFormula.formulaExample()
+        self.formulaWidget.setLayout(self.answerFormula.getLayout())
 
         # keyboard grid widget 1. Special symbol keyboard
         self.keyGridWidget1 = QWidget()
-        self.keyGridWidget1.setObjectName(u"gridLayoutWidget")
+        self.keyGridWidget1.setObjectName(u"keyGridWidget1")
         self.tab1Layout.addWidget(self.keyGridWidget1, 3, 0, 3, 5) # row, column, rowSpan, columnSpan.
 
         # keyboard grid 1
         self.keyboardGrid1 = QGridLayout(self.keyGridWidget1)
-        self.keyboardGrid1.setObjectName(u"gridLayout")
+        self.keyboardGrid1.setObjectName(u"keyboardGrid1")
         self.populateKeyBoardGrid(self.keyboardGrid1)
 
         # history ScrollArea
@@ -175,7 +176,7 @@ class Ui_MainWindow(object):
         self.historyScroll.setWidgetResizable(True) # ???
         self.tab1Layout.addWidget(self.historyScroll, 0, 5, 6, 3) # row, column, rowSpan, columnSpan. occupy whole column
         self.historyScrollContent = QWidget()
-        self.historyScrollContent.setObjectName(u"scrollAreaWidgetContents")
+        self.historyScrollContent.setObjectName(u"historyScrollAreaContents")
         self.historyScroll.setWidget(self.historyScrollContent)
         pass
 
@@ -187,45 +188,35 @@ class Ui_MainWindow(object):
         self.tab2.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.tab2Layout = QGridLayout()
         self.tab2.setLayout(self.tab2Layout)
-        # TODO set nof columns and rows for tab2Layout. For now assume 8x6
+        # nof columns and rows for tab2Layout. For now assume 8x6
 
         # function ScrollArea
         self.functionScroll = QScrollArea(self.tab2)
-        self.functionScroll.setObjectName(u"scrollArea_2")
+        self.functionScroll.setObjectName(u"functionScroll")
         self.functionScroll.setWidgetResizable(True) # ???
         self.tab2Layout.addWidget(self.functionScroll, 0, 0, 6, 3) # occupy whole column
         self.functionScrollContent = QWidget()
-        self.functionScrollContent.setObjectName(u"scrollAreaWidgetContents_2")
+        self.functionScrollContent.setObjectName(u"functionScrollContents")
         self.functionScroll.setWidget(self.functionScrollContent)
 
         # Where function graphs will be displayed. This will be replaced by matplotlib widget.
         self.graphWidget = QWidget(self.tab2)
-        self.graphWidget.setObjectName(u"widget_3")
+        self.graphWidget.setObjectName(u"graphWidget")
         self.tab2Layout.addWidget(self.graphWidget, 0, 3, 4, 5)
 
         # keyboard grid widget 2. Special symbol keyboard
         self.keyGridWidget2 = QWidget(self.tab2)
-        self.keyGridWidget2.setObjectName(u"gridLayoutWidget_2")
+        self.keyGridWidget2.setObjectName(u"keyGridWidget2")
         self.tab2Layout.addWidget(self.keyGridWidget2, 4, 3, 2, 5)
 
         # keyboard grid 2
         self.keyboardGrid2 = QGridLayout(self.keyGridWidget2)
-        self.keyboardGrid2.setObjectName(u"gridLayout_2")
+        self.keyboardGrid2.setObjectName(u"keyboardGrid2")
         self.populateKeyboardGrid2(self.keyboardGrid2)
 
         pass
 
     def retranslateUi(self, MainWindow):
         #MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        # self.pushButton.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
-        # self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
-        # self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
-        # self.pushButton_4.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
-        #self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Tab 1", None))
-        # self.pushButton_5.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
-        # self.pushButton_6.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
-        # self.pushButton_7.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
-        # self.pushButton_8.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
-        #self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Tab 2", None))
         pass
     # retranslateUi
