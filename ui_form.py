@@ -21,9 +21,17 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QMainWindow, QMenuBar,
     QPushButton, QScrollArea, QSizePolicy, QStatusBar,
     QTabWidget, QWidget,
     QLabel, QHBoxLayout, QVBoxLayout)
-from matplotlib.backends.backend_qtagg import FigureCanvas
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
+
+from graphlayout import GraphLayout
+
+# historyScroll and functionScroll will contain dynamically set Widgets with GraphLayout
+
+# FIXME The GraphLayout ignores proportions. For now I don't know how.
+
+# TODO put tab1 and tab2 setups in separate files.
+
+# TODO GraphLayout can be GraphWidget instead of wrapping GraphLayout in additional widget every time.
+
 
 class Ui_MainWindow(object):
     window_w = 800
@@ -130,17 +138,27 @@ class Ui_MainWindow(object):
         self.tab1.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.tab1Layout = QGridLayout()
         self.tab1.setLayout(self.tab1Layout)
-        # TODO set nof columns and rows for tab1Layout. For now assume 8x6
+        # nof columns and rows for tab1Layout. For now assume 8x6
 
-        # Where formulas will be typed. This will be replaced by matplotlib widget.
+        # Widget to hold GraphLayout
         self.formulaWidget = QWidget()
         self.formulaWidget.setObjectName(u"formulaWidget")
+        self.formulaWidget.setStyleSheet("QWidget#formulaWidget { border: 1px solid black; }")
         self.tab1Layout.addWidget(self.formulaWidget, 0, 0, 2, 5) # row, column, rowSpan, columnSpan. For some reason positional arguments don't work here
+        # GraphLayout for input
+        self.mathFormula = GraphLayout(True)
+        self.mathFormula.formulaExample()
+        self.formulaWidget.setLayout(self.mathFormula.getLayout())
 
         # Where answer will be displayed. This will be replaced by matplotlib widget.
         self.answerWidget = QWidget()
         self.answerWidget.setObjectName(u"answerWidget")
+        self.formulaWidget.setStyleSheet("QWidget#answerWidget { border: 1px solid black; }")
         self.tab1Layout.addWidget(self.answerWidget, 2, 0, 1, 5) # row, column, rowSpan, columnSpan.
+        # GraphLayout for results
+        self.answerFormula = GraphLayout(True)
+        self.answerFormula.formulaExample()
+        self.formulaWidget.setLayout(self.answerFormula.getLayout())
 
         # keyboard grid widget 1. Special symbol keyboard
         self.keyGridWidget1 = QWidget()
@@ -170,7 +188,7 @@ class Ui_MainWindow(object):
         self.tab2.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.tab2Layout = QGridLayout()
         self.tab2.setLayout(self.tab2Layout)
-        # TODO set nof columns and rows for tab2Layout. For now assume 8x6
+        # nof columns and rows for tab2Layout. For now assume 8x6
 
         # function ScrollArea
         self.functionScroll = QScrollArea(self.tab2)
