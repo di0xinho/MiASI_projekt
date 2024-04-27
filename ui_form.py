@@ -21,7 +21,9 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QMainWindow, QMenuBar,
     QPushButton, QScrollArea, QSizePolicy, QStatusBar,
     QTabWidget, QWidget,
     QLabel, QHBoxLayout, QVBoxLayout)
-
+from matplotlib.backends.backend_qtagg import FigureCanvas
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
 class Ui_MainWindow(object):
     window_w = 800
@@ -132,22 +134,22 @@ class Ui_MainWindow(object):
 
         # Where formulas will be typed. This will be replaced by matplotlib widget.
         self.formulaWidget = QWidget()
-        self.formulaWidget.setObjectName(u"widget")
+        self.formulaWidget.setObjectName(u"formulaWidget")
         self.tab1Layout.addWidget(self.formulaWidget, 0, 0, 2, 5) # row, column, rowSpan, columnSpan. For some reason positional arguments don't work here
 
         # Where answer will be displayed. This will be replaced by matplotlib widget.
         self.answerWidget = QWidget()
-        self.answerWidget.setObjectName(u"widget_2")
+        self.answerWidget.setObjectName(u"answerWidget")
         self.tab1Layout.addWidget(self.answerWidget, 2, 0, 1, 5) # row, column, rowSpan, columnSpan.
 
         # keyboard grid widget 1. Special symbol keyboard
         self.keyGridWidget1 = QWidget()
-        self.keyGridWidget1.setObjectName(u"gridLayoutWidget")
+        self.keyGridWidget1.setObjectName(u"keyGridWidget1")
         self.tab1Layout.addWidget(self.keyGridWidget1, 3, 0, 3, 5) # row, column, rowSpan, columnSpan.
 
         # keyboard grid 1
         self.keyboardGrid1 = QGridLayout(self.keyGridWidget1)
-        self.keyboardGrid1.setObjectName(u"gridLayout")
+        self.keyboardGrid1.setObjectName(u"keyboardGrid1")
         self.populateKeyBoardGrid(self.keyboardGrid1)
 
         # history ScrollArea
@@ -156,7 +158,7 @@ class Ui_MainWindow(object):
         self.historyScroll.setWidgetResizable(True) # ???
         self.tab1Layout.addWidget(self.historyScroll, 0, 5, 6, 3) # row, column, rowSpan, columnSpan. occupy whole column
         self.historyScrollContent = QWidget()
-        self.historyScrollContent.setObjectName(u"scrollAreaWidgetContents")
+        self.historyScrollContent.setObjectName(u"historyScrollAreaContents")
         self.historyScroll.setWidget(self.historyScrollContent)
         pass
 
@@ -172,26 +174,26 @@ class Ui_MainWindow(object):
 
         # function ScrollArea
         self.functionScroll = QScrollArea(self.tab2)
-        self.functionScroll.setObjectName(u"scrollArea_2")
+        self.functionScroll.setObjectName(u"functionScroll")
         self.functionScroll.setWidgetResizable(True) # ???
         self.tab2Layout.addWidget(self.functionScroll, 0, 0, 6, 3) # occupy whole column
         self.functionScrollContent = QWidget()
-        self.functionScrollContent.setObjectName(u"scrollAreaWidgetContents_2")
+        self.functionScrollContent.setObjectName(u"functionScrollContents")
         self.functionScroll.setWidget(self.functionScrollContent)
 
         # Where function graphs will be displayed. This will be replaced by matplotlib widget.
         self.graphWidget = QWidget(self.tab2)
-        self.graphWidget.setObjectName(u"widget_3")
+        self.graphWidget.setObjectName(u"graphWidget")
         self.tab2Layout.addWidget(self.graphWidget, 0, 3, 4, 5)
 
         # keyboard grid widget 2. Special symbol keyboard
         self.keyGridWidget2 = QWidget(self.tab2)
-        self.keyGridWidget2.setObjectName(u"gridLayoutWidget_2")
+        self.keyGridWidget2.setObjectName(u"keyGridWidget2")
         self.tab2Layout.addWidget(self.keyGridWidget2, 4, 3, 2, 5)
 
         # keyboard grid 2
         self.keyboardGrid2 = QGridLayout(self.keyGridWidget2)
-        self.keyboardGrid2.setObjectName(u"gridLayout_2")
+        self.keyboardGrid2.setObjectName(u"keyboardGrid2")
         self.populateKeyboardGrid2(self.keyboardGrid2)
 
         pass
