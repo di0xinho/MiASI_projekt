@@ -15,9 +15,11 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QMainWindow, QMenuBar,
     QTabWidget, QWidget,
     QLabel, QHBoxLayout, QVBoxLayout)
 
-from GraphLayout import GraphLayout
+from graphlayout import GraphLayout
 
 # historyScroll and functionScroll will contain dynamically set Widgets with GraphLayout
+historyScroll = None
+"""historyScroll is list of previously calculated equations"""
 
 # FIXME The GraphLayout ignores proportions. For now I don't know how to fix this.
 
@@ -64,7 +66,7 @@ def setupTab1(parent):
     # keyboard grid 1
     parent.keyboardGrid1 = QGridLayout(parent.keyGridWidget1)
     parent.keyboardGrid1.setObjectName(u"keyboardGrid1")
-    parent.populateKeyBoardGrid(parent.keyboardGrid1)
+    populateKeyBoardGrid(parent, parent.keyboardGrid1)
 
     # history ScrollArea
     parent.historyScroll = QScrollArea()
@@ -74,4 +76,30 @@ def setupTab1(parent):
     parent.historyScrollContent = QWidget()
     parent.historyScrollContent.setObjectName(u"historyScrollAreaContents")
     parent.historyScroll.setWidget(parent.historyScrollContent)
+    pass
+
+def populateKeyBoardGrid(parent, keyboardGrid: QGridLayout):
+    """Populate keyboard grid. First parameter is keyboardGrid reference. There are 3 ideas for second parameter:
+        - pass tab number. 1 or 2
+        - pass size keyboardGrid takes in its parent view
+        - two different functions for two different tabs
+        What about button names? Maybe pass also button list/tuple?
+        """
+    # some random buttons to populate keyboardGrid:
+    # button 1.1
+    parent.pushButton11 = QPushButton()
+    parent.pushButton11.setObjectName(u"pushButton_1")
+    keyboardGrid.addWidget(parent.pushButton11, 0, 0, 1, 1)
+    # button 1.2
+    parent.pushButton12 = QPushButton()
+    parent.pushButton12.setObjectName(u"pushButton_2")
+    keyboardGrid.addWidget(parent.pushButton12, 0, 1, 1, 1)
+    # button 1.3
+    parent.pushButton13 = QPushButton()
+    parent.pushButton13.setObjectName(u"pushButton_3")
+    keyboardGrid.addWidget(parent.pushButton13, 1, 0, 1, 1)
+    # button 1.4
+    parent.pushButton14 = QPushButton()
+    parent.pushButton14.setObjectName(u"pushButton_4")
+    keyboardGrid.addWidget(parent.pushButton14, 1, 1, 1, 1)
     pass
