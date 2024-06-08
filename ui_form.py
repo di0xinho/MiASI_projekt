@@ -28,8 +28,8 @@ import ui_tab2
 import ui_tab1
 
 class Ui_MainWindow(object):
-    window_w = 800
-    window_h = 600
+    window_w = 1200
+    window_h = 800
     window_name = u"QT Calc 🐍" # u for unicode string
 
     def setupUi(self, MainWindow):
