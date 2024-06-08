@@ -86,20 +86,31 @@ def populateKeyBoardGrid(parent, keyboardGrid: QGridLayout):
         What about button names? Maybe pass also button list/tuple?
         """
     # some random buttons to populate keyboardGrid:
-    # button 1.1
-    parent.pushButton11 = QPushButton()
-    parent.pushButton11.setObjectName(u"pushButton_1")
-    keyboardGrid.addWidget(parent.pushButton11, 0, 0, 1, 1)
-    # button 1.2
-    parent.pushButton12 = QPushButton()
-    parent.pushButton12.setObjectName(u"pushButton_2")
-    keyboardGrid.addWidget(parent.pushButton12, 0, 1, 1, 1)
-    # button 1.3
-    parent.pushButton13 = QPushButton()
-    parent.pushButton13.setObjectName(u"pushButton_3")
-    keyboardGrid.addWidget(parent.pushButton13, 1, 0, 1, 1)
-    # button 1.4
-    parent.pushButton14 = QPushButton()
-    parent.pushButton14.setObjectName(u"pushButton_4")
-    keyboardGrid.addWidget(parent.pushButton14, 1, 1, 1, 1)
+    
+    # Co do ułamków, potęg i nawiasów - jeszcze nie dodaję tych guzików
+    # parent.pushButtonFractions = QPushButton("Ułamki")
+    # parent.pushButtonPowers = QPushButton("Potęgi")
+    # parent.pushButtonBrackets = QPushButton("Nawiasy")
+    parent.pushButtonSine = QPushButton("sin")
+    parent.pushButtonCosine = QPushButton("cos")
+    parent.pushButtonTangent = QPushButton("tan")
+    parent.pushButtonLogarithms = QPushButton("log")
+    parent.pushButtonSquareRoot = QPushButton("√")
+    parent.pushButtonPi = QPushButton("π")
+    parent.pushButtonEuler = QPushButton("e")
+    parent.pushButtonAbsolute = QPushButton("abs")
+
+    # adding buttons to keyboardGrid
+    
+    # parent.keyboardGrid1.addWidget(parent.pushButtonFractions, 0, 2)
+    # parent.keyboardGrid1.addWidget(parent.pushButtonPowers, 0, 3)
+    # parent.keyboardGrid1.addWidget(parent.pushButtonBrackets, 0, 4)
+    parent.keyboardGrid1.addWidget(parent.pushButtonSine, 1, 2)
+    parent.keyboardGrid1.addWidget(parent.pushButtonCosine, 1, 3)
+    parent.keyboardGrid1.addWidget(parent.pushButtonTangent, 1, 4)
+    parent.keyboardGrid1.addWidget(parent.pushButtonLogarithms, 2, 2)
+    parent.keyboardGrid1.addWidget(parent.pushButtonSquareRoot, 2, 3)
+    parent.keyboardGrid1.addWidget(parent.pushButtonPi, 2, 4)
+    parent.keyboardGrid1.addWidget(parent.pushButtonEuler, 3, 2)
+    parent.keyboardGrid1.addWidget(parent.pushButtonAbsolute, 3, 3)
     pass
