@@ -88,9 +88,20 @@ def populateKeyBoardGrid(parent, keyboardGrid: QGridLayout):
     # some random buttons to populate keyboardGrid:
     
     # Co do ułamków, potęg i nawiasów - jeszcze nie dodaję tych guzików
-    # parent.pushButtonFractions = QPushButton("Ułamki")
-    # parent.pushButtonPowers = QPushButton("Potęgi")
-    # parent.pushButtonBrackets = QPushButton("Nawiasy")
+    parent.pushButtonOne = QPushButton("1")
+    parent.pushButtonTwo = QPushButton("2")
+    parent.pushButtonThree = QPushButton("3")
+    parent.pushButtonFour = QPushButton("4")
+    parent.pushButtonFive = QPushButton("5")
+    parent.pushButtonSix = QPushButton("6")
+    parent.pushButtonSeven = QPushButton("7")
+    parent.pushButtonEight = QPushButton("8")
+    parent.pushButtonNine = QPushButton("9")
+    parent.pushButtonComma = QPushButton(".")
+    parent.pushButtonFractions = QPushButton("Ułamek")
+    parent.pushButtonPowers = QPushButton("Potęga")
+    parent.pushButtonLeftBracket = QPushButton("(")
+    parent.pushButtonRightBracket = QPushButton(")")
     parent.pushButtonSine = QPushButton("sin")
     parent.pushButtonCosine = QPushButton("cos")
     parent.pushButtonTangent = QPushButton("tan")
@@ -101,10 +112,11 @@ def populateKeyBoardGrid(parent, keyboardGrid: QGridLayout):
     parent.pushButtonAbsolute = QPushButton("abs")
 
     # adding buttons to keyboardGrid
-    
-    # parent.keyboardGrid1.addWidget(parent.pushButtonFractions, 0, 2)
-    # parent.keyboardGrid1.addWidget(parent.pushButtonPowers, 0, 3)
-    # parent.keyboardGrid1.addWidget(parent.pushButtonBrackets, 0, 4)
+
+    parent.keyboardGrid1.addWidget(parent.pushButtonFractions, 0, 2)
+    parent.keyboardGrid1.addWidget(parent.pushButtonPowers, 0, 3)
+    parent.keyboardGrid1.addWidget(parent.pushButtonLeftBracket, 0, 4)
+    parent.keyboardGrid1.addWidget(parent.pushButtonRightBracket, 0, 5)
     parent.keyboardGrid1.addWidget(parent.pushButtonSine, 1, 2)
     parent.keyboardGrid1.addWidget(parent.pushButtonCosine, 1, 3)
     parent.keyboardGrid1.addWidget(parent.pushButtonTangent, 1, 4)
@@ -113,4 +125,16 @@ def populateKeyBoardGrid(parent, keyboardGrid: QGridLayout):
     parent.keyboardGrid1.addWidget(parent.pushButtonPi, 2, 4)
     parent.keyboardGrid1.addWidget(parent.pushButtonEuler, 3, 2)
     parent.keyboardGrid1.addWidget(parent.pushButtonAbsolute, 3, 3)
+    parent.keyboardGrid1.addWidget(parent.pushButtonComma, 3, 4)
+    parent.keyboardGrid1.addWidget(parent.pushButtonOne, 4, 2)
+    parent.keyboardGrid1.addWidget(parent.pushButtonTwo, 4, 3)
+    parent.keyboardGrid1.addWidget(parent.pushButtonThree, 4, 4)
+    parent.keyboardGrid1.addWidget(parent.pushButtonFour, 5, 2)
+    parent.keyboardGrid1.addWidget(parent.pushButtonFive, 5, 3)
+    parent.keyboardGrid1.addWidget(parent.pushButtonSix, 5, 4)
+    parent.keyboardGrid1.addWidget(parent.pushButtonSeven, 6, 2)
+    parent.keyboardGrid1.addWidget(parent.pushButtonEight, 6, 3)
+    parent.keyboardGrid1.addWidget(parent.pushButtonNine, 6, 4)
+    
+
     pass
