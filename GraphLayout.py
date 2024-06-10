@@ -37,9 +37,9 @@ class GraphLayout:
     - Use ax.clear() to clear display.\n
     When using formulaExample(), typeFormula() there's no need to call draw() nor clear().
     """
-    __graphLayout = QVBoxLayout()
     
     def __init__(self, withToolbar = False) -> None:
+        self.__graphLayout = QVBoxLayout()
         self.__populateGraphLayout(self.__graphLayout, withToolbar)
         self.ax = self.graph.figure.subplots()
         self.draw: function = self.graph.figure.canvas.draw
@@ -93,22 +93,18 @@ class GraphLayout:
         self.draw()
         pass
 
-    def typeFormula(self, mathFormula: str):
-        """Display math formula written in LateX format.
+    def typeFormula(self, mathFormula: str, fontSize=20):
         """
-        self.__setLatexText()
-        pass
-
-    def __setLatexText(self, latexText: str):
-        """
+        Display math formula written in LateX format.
         Instead of using widget for displaying graphs, use it for
         displaying mathematical formulas written in LateX.
         """
+        latexText = mathFormula
         print('Change text')
         try:
             self.ax.clear()
             self.ax.axis('off')
-            self.ax.text(0.5, 0.5, f"${latexText}$", size=50, ha='center', va='center') # **kwargs: matplotlib.text.Text properties
+            self.ax.text(0.5, 0.5, f"${latexText}$", size=fontSize, ha='center', va='center') # **kwargs: matplotlib.text.Text properties
             #self.ax.tight()
             self.draw()
         except:
@@ -116,10 +112,22 @@ class GraphLayout:
         pass
     pass # end of GraphLayout
 
-def getToolbarActions(toolbar: NavigationToolbar):
-    """Get toolbar actions as strings"""
-    actions = toolbar.actions()
-    return [action.text() for action in actions]
+    def setNormalText(self, text: str, fontSize=20):
+        """
+        This can be used to set some hints.
+        For setting math formulas use typeFormula
+        """
+        print('Change text')
+        try:
+            self.ax.clear()
+            self.ax.axis('off')
+            self.ax.text(0.5, 0.5, f"{text}", size=fontSize, ha='center', va='center') # **kwargs: matplotlib.text.Text properties
+            #self.ax.tight()
+            self.draw()
+        except:
+            print("Some exception occurred")
+        pass
+    pass # end of GraphLayout
 
 def removeActionsFromToolbar(toolbar: NavigationToolbar, actionsToStay: list[int]):
     """Removes actions from toolbar which are not on given list.
@@ -131,10 +139,4 @@ def removeActionsFromToolbar(toolbar: NavigationToolbar, actionsToStay: list[int
     for key in range(len(actions)):
         if key not in actionsToStay:
             toolbar.removeAction(actions[key])
-    pass
-
-def printBarActions(toolbar: NavigationToolbar):
-    actions = toolbar.actions()
-    for x in range(len(actions)):
-        print(f"{x}: \'" + actions[x].text() + '\',')
     pass

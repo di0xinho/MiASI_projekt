@@ -62,7 +62,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         MainWindow.setCentralWidget(self.tabWidget)
 
-        ui_tab1.setupTab1(self)
+        ui_tab1.setupTab1(self, self.window_h)
         ui_tab2.setupTab2(self)
 
         # set starting tab

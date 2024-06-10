@@ -28,7 +28,7 @@ def setupTab2(parent):
     # create tab 2 widget
     parent.tab2 = QWidget()
     parent.tab2.setObjectName(u"tab2")
-    parent.tabWidget.addTab(parent.tab2, "Wykresy (tab2)")
+    parent.tabWidget.addTab(parent.tab2, "Wykresy")
     parent.tab2.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
     parent.tab2Layout = QGridLayout()
     parent.tab2.setLayout(parent.tab2Layout)

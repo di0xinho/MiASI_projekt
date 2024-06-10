@@ -21,22 +21,22 @@ from graphlayout import GraphLayout
 historyScroll = None
 """historyScroll is list of previously calculated equations"""
 
-# FIXME The GraphLayout ignores proportions. For now I don't know how to fix this.
 
-# TODO GraphLayout can be GraphWidget instead of wrapping GraphLayout in additional widget every time.
 
-def setupTab1(parent):
+def setupTab1(parent, totalHeight = 0):
     """
     Parameters:
     parent - Ui_Mainwindow class from ui_form.py
+    totalHeight - if > 0: set constant height of elements.
+    This solves bug with incorrect widget size proportions, but unfortunately means no responsive layout.
     """
     parent.tab1 = QWidget()
     parent.tab1.setObjectName(u"tab1")
-    parent.tabWidget.addTab(parent.tab1, "Naukowy (tab1)")
+    parent.tabWidget.addTab(parent.tab1, "Naukowy")
     parent.tab1.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
     parent.tab1Layout = QGridLayout()
     parent.tab1.setLayout(parent.tab1Layout)
-    # nof columns and rows for tab1Layout. For now assume 8x6
+    # nof rows and columns is 8x6
 
     # Widget to hold GraphLayout
     parent.formulaWidget = QWidget()
@@ -46,17 +46,22 @@ def setupTab1(parent):
     # GraphLayout for input
     parent.mathFormula = GraphLayout(True)
     parent.mathFormula.formulaExample()
+    #parent.mathFormula.typeFormula('3.14 = \pi')
     parent.formulaWidget.setLayout(parent.mathFormula.getLayout())
+    if totalHeight > 0:
+        parent.formulaWidget.setMaximumHeight(totalHeight//6*2) # 2/6
 
     # Where answer will be displayed. This will be replaced by matplotlib widget.
     parent.answerWidget = QWidget()
     parent.answerWidget.setObjectName(u"answerWidget")
-    parent.formulaWidget.setStyleSheet("QWidget#answerWidget { border: 1px solid black; }")
+    parent.answerWidget.setStyleSheet("QWidget#answerWidget { border: 1px solid black; }")
     parent.tab1Layout.addWidget(parent.answerWidget, 2, 0, 1, 5) # row, column, rowSpan, columnSpan.
     # GraphLayout for results
     parent.answerFormula = GraphLayout(True)
-    parent.answerFormula.formulaExample()
-    parent.formulaWidget.setLayout(parent.answerFormula.getLayout())
+    parent.answerFormula.setNormalText("Answer will appear here")
+    parent.answerWidget.setLayout(parent.answerFormula.getLayout())
+    if totalHeight > 0:
+        parent.answerWidget.setMaximumHeight(totalHeight//6) # 1/6
 
     # keyboard grid widget 1. Special symbol keyboard
     parent.keyGridWidget1 = QWidget()
@@ -67,6 +72,8 @@ def setupTab1(parent):
     parent.keyboardGrid1 = QGridLayout(parent.keyGridWidget1)
     parent.keyboardGrid1.setObjectName(u"keyboardGrid1")
     populateKeyBoardGrid(parent, parent.keyboardGrid1)
+    if totalHeight > 0:
+        parent.keyGridWidget1.setMaximumHeight(totalHeight//2) # 3/6
 
     # history ScrollArea
     parent.historyScroll = QScrollArea()
@@ -88,6 +95,7 @@ def populateKeyBoardGrid(parent, keyboardGrid: QGridLayout):
     # some random buttons to populate keyboardGrid:
     
     # Co do ułamków, potęg i nawiasów - jeszcze nie dodaję tych guzików
+    # FIXME where 0? 🤣
     parent.pushButtonOne = QPushButton("1")
     parent.pushButtonTwo = QPushButton("2")
     parent.pushButtonThree = QPushButton("3")
