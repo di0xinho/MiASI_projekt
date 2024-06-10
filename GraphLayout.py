@@ -88,7 +88,7 @@ class GraphLayout:
     def __prepareFormulaExample(self):
         self.ax.clear()
         self.ax.axis('off')
-        self.ax.text(0.5, 0.5, "$3.12^4$") # example of LateX text between $ signs
+        self.ax.text(0.5, 0.5, "$3.12^4$", size = 20) # example of LateX text between $ signs
         #self.ax.tight()
         self.draw()
         pass
@@ -122,7 +122,7 @@ class GraphLayout:
             self.ax.clear()
             self.ax.axis('off')
             self.ax.text(0.5, 0.5, f"{text}", size=fontSize, ha='center', va='center') # **kwargs: matplotlib.text.Text properties
-            #self.ax.tight()
+            self.ax.tight()
             self.draw()
         except:
             print("Some exception occurred")

@@ -31,6 +31,11 @@ class Ui_MainWindow(object):
     window_w = 1200
     window_h = 800
     window_name = u"QT Calc 🐍" # u for unicode string
+    def __init__(self) -> None:
+        super().__init__()
+        self.tab1Buttons = {}
+        self.tab2Buttons = {}
+        pass
 
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():

@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QMainWindow, QMenuBar,
     QLabel, QHBoxLayout, QVBoxLayout)
 
 from graphlayout import GraphLayout
+import helpbuttons as helpBT
 
 # historyScroll and functionScroll will contain dynamically set Widgets with GraphLayout
 historyScroll = None
@@ -71,7 +72,7 @@ def setupTab1(parent, totalHeight = 0):
     # keyboard grid 1
     parent.keyboardGrid1 = QGridLayout(parent.keyGridWidget1)
     parent.keyboardGrid1.setObjectName(u"keyboardGrid1")
-    populateKeyBoardGrid(parent, parent.keyboardGrid1)
+    populateKeyBoardGrid(parent)
     if totalHeight > 0:
         parent.keyGridWidget1.setMaximumHeight(totalHeight//2) # 3/6
 
@@ -85,64 +86,22 @@ def setupTab1(parent, totalHeight = 0):
     parent.historyScroll.setWidget(parent.historyScrollContent)
     pass
 
-def populateKeyBoardGrid(parent, keyboardGrid: QGridLayout):
-    """Populate keyboard grid. First parameter is keyboardGrid reference. There are 3 ideas for second parameter:
-        - pass tab number. 1 or 2
-        - pass size keyboardGrid takes in its parent view
-        - two different functions for two different tabs
-        What about button names? Maybe pass also button list/tuple?
-        """
-    # some random buttons to populate keyboardGrid:
-    
-    # Co do ułamków, potęg i nawiasów - jeszcze nie dodaję tych guzików
-    # FIXME where 0? 🤣
-    parent.pushButtonOne = QPushButton("1")
-    parent.pushButtonTwo = QPushButton("2")
-    parent.pushButtonThree = QPushButton("3")
-    parent.pushButtonFour = QPushButton("4")
-    parent.pushButtonFive = QPushButton("5")
-    parent.pushButtonSix = QPushButton("6")
-    parent.pushButtonSeven = QPushButton("7")
-    parent.pushButtonEight = QPushButton("8")
-    parent.pushButtonNine = QPushButton("9")
-    parent.pushButtonComma = QPushButton(".")
-    parent.pushButtonFractions = QPushButton("Ułamek")
-    parent.pushButtonPowers = QPushButton("Potęga")
-    parent.pushButtonLeftBracket = QPushButton("(")
-    parent.pushButtonRightBracket = QPushButton(")")
-    parent.pushButtonSine = QPushButton("sin")
-    parent.pushButtonCosine = QPushButton("cos")
-    parent.pushButtonTangent = QPushButton("tan")
-    parent.pushButtonLogarithms = QPushButton("log")
-    parent.pushButtonSquareRoot = QPushButton("√")
-    parent.pushButtonPi = QPushButton("π")
-    parent.pushButtonEuler = QPushButton("e")
-    parent.pushButtonAbsolute = QPushButton("abs")
+def populateKeyBoardGrid(parent):
+    "Populate keyboard grid in tab 1."
+    #parent.tab1Buttons # buttons will be added to this dict
 
-    # adding buttons to keyboardGrid
+    scientifcKeyboard = [
+        'Ułamek', '.', '(', ')', 
+        'sin', 'cos', 'tan', 'π',
+        'Potęga', '√', 'log', 'e',
+        'mod', 'abs'
+    ] + helpBT.inserter(
+        [f'{x}' for x in range(10)], # lista cyfr
+        [(1, '/'), (4+1, '*'), (7+2, '+'), (10+3, '-')] # te liczby: przed jaką cyfrą wstawić element, to po +: ile już wstawiono. 10 nie ma, ale chodzi o to, że za 9
+    )
 
-    parent.keyboardGrid1.addWidget(parent.pushButtonFractions, 0, 2)
-    parent.keyboardGrid1.addWidget(parent.pushButtonPowers, 0, 3)
-    parent.keyboardGrid1.addWidget(parent.pushButtonLeftBracket, 0, 4)
-    parent.keyboardGrid1.addWidget(parent.pushButtonRightBracket, 0, 5)
-    parent.keyboardGrid1.addWidget(parent.pushButtonSine, 1, 2)
-    parent.keyboardGrid1.addWidget(parent.pushButtonCosine, 1, 3)
-    parent.keyboardGrid1.addWidget(parent.pushButtonTangent, 1, 4)
-    parent.keyboardGrid1.addWidget(parent.pushButtonLogarithms, 2, 2)
-    parent.keyboardGrid1.addWidget(parent.pushButtonSquareRoot, 2, 3)
-    parent.keyboardGrid1.addWidget(parent.pushButtonPi, 2, 4)
-    parent.keyboardGrid1.addWidget(parent.pushButtonEuler, 3, 2)
-    parent.keyboardGrid1.addWidget(parent.pushButtonAbsolute, 3, 3)
-    parent.keyboardGrid1.addWidget(parent.pushButtonComma, 3, 4)
-    parent.keyboardGrid1.addWidget(parent.pushButtonOne, 4, 2)
-    parent.keyboardGrid1.addWidget(parent.pushButtonTwo, 4, 3)
-    parent.keyboardGrid1.addWidget(parent.pushButtonThree, 4, 4)
-    parent.keyboardGrid1.addWidget(parent.pushButtonFour, 5, 2)
-    parent.keyboardGrid1.addWidget(parent.pushButtonFive, 5, 3)
-    parent.keyboardGrid1.addWidget(parent.pushButtonSix, 5, 4)
-    parent.keyboardGrid1.addWidget(parent.pushButtonSeven, 6, 2)
-    parent.keyboardGrid1.addWidget(parent.pushButtonEight, 6, 3)
-    parent.keyboardGrid1.addWidget(parent.pushButtonNine, 6, 4)
-    
+    keyboardMaker = helpBT.KeboardHelp(parent.keyboardGrid1, parent.tab1Buttons)
+    keyboardMaker.addButtons(scientifcKeyboard, 4)
+    # Now, buttons are stored in parent.tab1Buttons map. To get tan button for example: parent.tab1Buttons['tan']
 
     pass

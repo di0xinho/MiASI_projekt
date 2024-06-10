@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QMainWindow, QMenuBar,
     QLabel, QHBoxLayout, QVBoxLayout)
 
 from graphlayout import GraphLayout
+import helpbuttons as helpBT
 
 functionScroll = None
 """functionScroll is list of user-defined functions"""
@@ -56,26 +57,26 @@ def setupTab2(parent):
     # keyboard grid 2
     parent.keyboardGrid2 = QGridLayout(parent.keyGridWidget2)
     parent.keyboardGrid2.setObjectName(u"keyboardGrid2")
-    populateKeyboardGrid2(parent, parent.keyboardGrid2)
+    populateKeyboardGrid2(parent)
     pass
 
-def populateKeyboardGrid2(parent, keyboardGrid2: QGridLayout):
-    # random buttons
-    # tworzenie przycisków "w pętli" wymaga makra / reflection czy podobnego mechanizmu. Może tablica/lista przycisków?
-    # button 2.1
-    parent.pushButton21 = QPushButton()
-    parent.pushButton21.setObjectName(u"pushButton_5")
-    keyboardGrid2.addWidget(parent.pushButton21, 0, 0, 1, 1)
-    # button 2.2
-    parent.pushButton22 = QPushButton()
-    parent.pushButton22.setObjectName(u"pushButton_6")
-    keyboardGrid2.addWidget(parent.pushButton22, 0, 1, 1, 1)
-    # button 2.3
-    parent.pushButton23 = QPushButton()
-    parent.pushButton23.setObjectName(u"pushButton_7")
-    keyboardGrid2.addWidget(parent.pushButton23, 1, 0, 1, 1)
-    # button 2.4
-    parent.pushButton24 = QPushButton()
-    parent.pushButton24.setObjectName(u"pushButton_8")
-    keyboardGrid2.addWidget(parent.pushButton24, 1, 1, 1, 1)
+def populateKeyboardGrid2(parent):
+    "Populate keyboard grid in tab 2."
+    
+    # Here, keyboard will be a little different.
+    # TODO modify keyboard to match function creation. x, y are certainly needed
+    functionKeyboard = [
+        'Ułamek', '.', '(', ')', 
+        'sin', 'cos', 'tan', 'π',
+        'Potęga', '√', 'log', 'e',
+        'mod', 'abs'
+    ] + helpBT.inserter(
+        [f'{x}' for x in range(10)], # lista cyfr
+        [(1, '/'), (4+1, '*'), (7+2, '+'), (10+3, '-')] # te liczby: przed jaką cyfrą wstawić element, to po +: ile już wstawiono. 10 nie ma, ale chodzi o to, że za 9
+    )
+
+    keyboardMaker = helpBT.KeboardHelp(parent.keyboardGrid2, parent.tab2Buttons)
+    keyboardMaker.addButtons(functionKeyboard, 4)
+
+    # Note: buttons can take more than one grid cell: keyboardGrid2.addWidget(parent.pushButton21, 0, 0, 2, 2)
     pass
