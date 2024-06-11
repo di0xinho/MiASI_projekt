@@ -22,7 +22,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QMainWindow, QMenuBar,
     QTabWidget, QWidget,
     QLabel, QHBoxLayout, QVBoxLayout)
 
-from graphlayout import GraphLayout
+from GraphLayout import GraphLayout
 
 import ui_tab2
 import ui_tab1
