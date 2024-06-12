@@ -16,6 +16,21 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        # Jak narazie pozostawię tą zmienną i wywołanie funkcji w tym pliku - raczej trzeba będzie to przenieść gdzieś indziej
+        self.current_expression = "" # Dodajemy atrybut do przechowywania aktualnego wyrażenia
+        self.setupButtons()
+
+    # Funkcja obsługująca dodawanie do wyrażenia matematycznego odpowiednie formuły matematyczne przypisane do guzików
+    def setupButtons(self):
+        for text, button in self.ui.tab1Buttons.items():
+            if text != '=':
+                button.clicked.connect(lambda ch, t=text: self.addToExpression(t))
+    
+    # Dodawanie do wyrażenia odpowiednich formuł matematycznych
+    def addToExpression(self, text):
+        self.current_expression += text
+        self.ui.mathFormula.typeFormula(self.current_expression)
+
 def checklibs():
     pkgs = ['PySide6', 'matplotlib'] # later 'numpy' will join the list
     ihaveall = True
