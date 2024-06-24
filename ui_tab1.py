@@ -15,7 +15,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QMainWindow, QMenuBar,
     QTabWidget, QWidget,
     QLabel, QHBoxLayout, QVBoxLayout)
 
-from GraphLayout import GraphLayout
+from graphlayout import GraphLayout
 from helpers import onEqualClick
 import helpbuttons as helpBT
 
