@@ -22,7 +22,7 @@ allActionsMap = {
 }
 """Map of actions that `NavigationToolbar` contains by default"""
 
-formulaActionKeys = [0,4,5,8,9,10]
+formulaActionKeys = [0,4,8,9,10]
 """Indexes of actions that toolbar for displaying math formulas should have."""
 
 class GraphLayout:
@@ -45,7 +45,7 @@ class GraphLayout:
         self.draw: function = self.graph.figure.canvas.draw
         self.draw()
         toolbar = self.graph_nav_menu
-        removeActionsFromToolbar(toolbar,formulaActionKeys)
+        removeActionsFromToolbar(toolbar, formulaActionKeys)
         pass
 
     def __populateGraphLayout(self, parentLayout: QBoxLayout, withToolbar: bool):
