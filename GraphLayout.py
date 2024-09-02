@@ -44,8 +44,9 @@ class GraphLayout:
         self.ax = self.graph.figure.subplots()
         self.draw: function = self.graph.figure.canvas.draw
         self.draw()
-        toolbar = self.graph_nav_menu
-        removeActionsFromToolbar(toolbar, formulaActionKeys)
+        if self.withToolbar:
+            toolbar = self.graph_nav_menu
+            removeActionsFromToolbar(toolbar, formulaActionKeys)
         pass
 
     def __populateGraphLayout(self, parentLayout: QBoxLayout, withToolbar: bool):
@@ -61,6 +62,7 @@ class GraphLayout:
         self.graph = FigureCanvas(Figure(figsize=(5, 3))) # graph
         self.graph.setObjectName(u"graph")
         
+        self.withToolbar = withToolbar
         # graph nav menu
         if withToolbar:
             self.graph_nav_menu = NavigationToolbar(self.graph) # , self.centralwidget

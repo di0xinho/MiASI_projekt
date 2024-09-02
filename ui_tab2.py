@@ -12,10 +12,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QGridLayout, QMainWindow, QMenuBar,
     QPushButton, QScrollArea, QSizePolicy, QStatusBar,
-    QTabWidget, QWidget,
+    QTabWidget, QWidget, QListWidget, QListWidgetItem,
     QLabel, QHBoxLayout, QVBoxLayout)
 
 from graphlayout import GraphLayout
+import listelement
 import helpbuttons as helpBT
 
 functionScroll = None
@@ -36,13 +37,18 @@ def setupTab2(parent):
     # nof columns and rows for tab2Layout. For now assume 8x6
 
     # function ScrollArea
-    parent.functionScroll = QScrollArea(parent.tab2)
+    parent.funcList = listelement.GraphList(parent.tab2) # not ui thing
+    parent.funcList.prepareExample()
+    parent.functionScroll = parent.funcList.list_widget #QListWidget(parent.tab2)#
     parent.functionScroll.setObjectName(u"functionScroll")
-    parent.functionScroll.setWidgetResizable(True) # ???
+    #item = QListWidgetItem(parent.functionScroll)
+    #parent.functionScroll.setItemWidget(item, listelement.prepareWidget(1))
+    print('this many widgets on list', len(parent.funcList.widgets))
+    #parent.functionScroll.setWidgetResizable(True) # ???
     parent.tab2Layout.addWidget(parent.functionScroll, 0, 0, 6, 3) # occupy whole column
-    parent.functionScrollContent = QWidget()
-    parent.functionScrollContent.setObjectName(u"functionScrollContents")
-    parent.functionScroll.setWidget(parent.functionScrollContent)
+    # parent.functionScrollContent = QWidget()
+    # parent.functionScrollContent.setObjectName(u"functionScrollContents")
+    # parent.functionScroll.setWidget(parent.functionScrollContent)
 
     # Where function graphs will be displayed. This will be replaced by matplotlib widget.
     parent.graphWidget = QWidget(parent.tab2)

@@ -12,12 +12,13 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QGridLayout, QMainWindow, QMenuBar,
     QPushButton, QScrollArea, QSizePolicy, QStatusBar,
-    QTabWidget, QWidget,
+    QTabWidget, QWidget, QListWidget, QListWidgetItem,
     QLabel, QHBoxLayout, QVBoxLayout)
 
 from graphlayout import GraphLayout
 from helpers import onEqualClick
 import helpbuttons as helpBT
+import listelement
 
 # historyScroll and functionScroll will contain dynamically set Widgets with GraphLayout
 historyScroll = None
@@ -78,13 +79,15 @@ def setupTab1(parent, totalHeight = 0):
         parent.keyGridWidget1.setMaximumHeight(totalHeight//2) # 3/6
 
     # history ScrollArea
-    parent.historyScroll = QScrollArea()
-    parent.historyScroll.setObjectName(u"historyScrollArea")
-    parent.historyScroll.setWidgetResizable(True) # ???
+    parent.histList = listelement.GraphList(parent.tab1) # not ui thing
+    parent.histList.prepareExample()
+    parent.historyScroll = parent.histList.list_widget # QListWidget()
+    parent.historyScroll.setObjectName(u"historyScroll")
+    #parent.historyScroll.setWidgetResizable(True) # ???
     parent.tab1Layout.addWidget(parent.historyScroll, 0, 5, 6, 3) # row, column, rowSpan, columnSpan. occupy whole column
-    parent.historyScrollContent = QWidget()
-    parent.historyScrollContent.setObjectName(u"historyScrollAreaContents")
-    parent.historyScroll.setWidget(parent.historyScrollContent)
+    # parent.historyScrollContent = QWidget()
+    # parent.historyScrollContent.setObjectName(u"historyScrollAreaContents")
+    # parent.historyScroll.setWidget(parent.historyScrollContent)
     pass
 
 def populateKeyBoardGrid(parent):
