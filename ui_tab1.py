@@ -78,16 +78,12 @@ def setupTab1(parent, totalHeight = 0):
     if totalHeight > 0:
         parent.keyGridWidget1.setMaximumHeight(totalHeight//2) # 3/6
 
-    # history ScrollArea
+    # history list
     parent.histList = listelement.GraphList(parent.tab1) # not ui thing
     parent.histList.prepareExample()
-    parent.historyScroll = parent.histList.list_widget # QListWidget()
+    parent.historyScroll = parent.histList.list_widget
     parent.historyScroll.setObjectName(u"historyScroll")
-    #parent.historyScroll.setWidgetResizable(True) # ???
     parent.tab1Layout.addWidget(parent.historyScroll, 0, 5, 6, 3) # row, column, rowSpan, columnSpan. occupy whole column
-    # parent.historyScrollContent = QWidget()
-    # parent.historyScrollContent.setObjectName(u"historyScrollAreaContents")
-    # parent.historyScroll.setWidget(parent.historyScrollContent)
     pass
 
 def populateKeyBoardGrid(parent):

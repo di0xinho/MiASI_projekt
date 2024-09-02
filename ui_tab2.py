@@ -36,19 +36,12 @@ def setupTab2(parent):
     parent.tab2.setLayout(parent.tab2Layout)
     # nof columns and rows for tab2Layout. For now assume 8x6
 
-    # function ScrollArea
+    # function list
     parent.funcList = listelement.GraphList(parent.tab2) # not ui thing
     parent.funcList.prepareExample()
-    parent.functionScroll = parent.funcList.list_widget #QListWidget(parent.tab2)#
+    parent.functionScroll = parent.funcList.list_widget
     parent.functionScroll.setObjectName(u"functionScroll")
-    #item = QListWidgetItem(parent.functionScroll)
-    #parent.functionScroll.setItemWidget(item, listelement.prepareWidget(1))
-    print('this many widgets on list', len(parent.funcList.widgets))
-    #parent.functionScroll.setWidgetResizable(True) # ???
     parent.tab2Layout.addWidget(parent.functionScroll, 0, 0, 6, 3) # occupy whole column
-    # parent.functionScrollContent = QWidget()
-    # parent.functionScrollContent.setObjectName(u"functionScrollContents")
-    # parent.functionScroll.setWidget(parent.functionScrollContent)
 
     # Where function graphs will be displayed. This will be replaced by matplotlib widget.
     parent.graphWidget = QWidget(parent.tab2)
