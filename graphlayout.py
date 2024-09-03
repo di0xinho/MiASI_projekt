@@ -7,6 +7,10 @@ from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
+# used for plot example and plotting
+import sympy as sp
+import numpy as np
+
 allActionsMap = {
     0:'Home',
 	1:'Back',
@@ -38,15 +42,21 @@ class GraphLayout:
     When using formulaExample(), typeFormula() there's no need to call draw() nor clear().
     """
     
-    def __init__(self, withToolbar = False) -> None:
+    def __init__(self, withToolbar = False, plotMode = False) -> None:
         self.__graphLayout = QVBoxLayout()
         self.__populateGraphLayout(self.__graphLayout, withToolbar)
         self.ax = self.graph.figure.subplots()
         self.draw: function = self.graph.figure.canvas.draw
         self.draw()
+        shortToolbar = True
+        if plotMode:
+            shortToolbar = False
+            self.plotMode = True
+            # connected 'xlim_changed' callback to GraphLayout.redrawPlot() in MainWindow. For some reason it has to be this way :/
         if self.withToolbar:
             toolbar = self.graph_nav_menu
-            removeActionsFromToolbar(toolbar, formulaActionKeys)
+            if shortToolbar:
+                removeActionsFromToolbar(toolbar, formulaActionKeys)
         pass
 
     def __populateGraphLayout(self, parentLayout: QBoxLayout, withToolbar: bool):
@@ -128,6 +138,45 @@ class GraphLayout:
             self.draw()
         except:
             print("Some exception occurred")
+        pass
+
+    def plotExample(self):
+        # clear:
+        self.ax.clear()
+        # example:
+        x = sp.symbols('x')  # variable
+        f = sp.sin(x) + sp.cos(x)  # function
+        
+        # convert to numeric
+        f_num = sp.lambdify(x, f)
+        self.f_num = f_num
+        self.f_col = 'red'
+        x_vals = np.linspace(-10, 10, 10000) # thanks to redrawPlot view is not limited to [-10,10].
+        y_vals = f_num(x_vals)
+
+        # plot
+        self.ax.plot(x_vals, y_vals, color = self.f_col)
+        self.ax.set_xlabel('x',)
+        self.ax.set_ylabel('f(x)')
+        self.ax.set_title('Plot of f(x)')
+        #self.ax.show()
+        self.draw()
+        pass
+
+    def redrawPlot(self):
+        "when graph view is moved it has to be redrawn"
+        if self.f_num is None:
+            return
+        minx, maxx = self.ax.get_xlim()
+        x_vals = np.linspace(minx, maxx, 3840)
+        y_vals = self.f_num(x_vals)
+
+        # plot
+        self.ax.plot(x_vals, y_vals, color = self.f_col)
+        self.ax.set_xlabel('x',)
+        self.ax.set_ylabel('f(x)')
+        self.ax.set_title('Plot of f(x)')
+        self.draw()
         pass
     pass # end of GraphLayout
 

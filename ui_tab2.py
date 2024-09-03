@@ -43,10 +43,14 @@ def setupTab2(parent):
     parent.functionScroll.setObjectName(u"functionScroll")
     parent.tab2Layout.addWidget(parent.functionScroll, 0, 0, 6, 3) # occupy whole column
 
-    # Where function graphs will be displayed. This will be replaced by matplotlib widget.
+    # Where function graphs will be displayed
     parent.graphWidget = QWidget(parent.tab2)
     parent.graphWidget.setObjectName(u"graphWidget")
     parent.tab2Layout.addWidget(parent.graphWidget, 0, 3, 4, 5)
+    # GraphLayout showing function 📈
+    parent.graphDisplay = GraphLayout(True, True)
+    parent.graphDisplay.plotExample()
+    parent.graphWidget.setLayout(parent.graphDisplay.getLayout())
 
     # keyboard grid widget 2. Special symbol keyboard
     parent.keyGridWidget2 = QWidget(parent.tab2)

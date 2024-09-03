@@ -54,7 +54,7 @@ def setupTab1(parent, totalHeight = 0):
     if totalHeight > 0:
         parent.formulaWidget.setMaximumHeight(totalHeight//6*2) # 2/6
 
-    # Where answer will be displayed. This will be replaced by matplotlib widget.
+    # Where answer will be displayed
     parent.answerWidget = QWidget()
     parent.answerWidget.setObjectName(u"answerWidget")
     parent.answerWidget.setStyleSheet("QWidget#answerWidget { border: 1px solid black; }")

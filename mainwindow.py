@@ -10,6 +10,9 @@ import importlib as imp
 #     pyside2-uic form.ui -o ui_form.py
 from ui_form import Ui_MainWindow
 
+# for debugging
+import time
+
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -19,6 +22,11 @@ class MainWindow(QMainWindow):
         # Jak narazie pozostawię tą zmienną i wywołanie funkcji w tym pliku - raczej trzeba będzie to przenieść gdzieś indziej
         self.current_expression = "" # Dodajemy atrybut do przechowywania aktualnego wyrażenia
         self.setupButtons()
+        #for sleepy in range(10):
+        #    time.sleep(3)
+        print('x:', self.ui.graphDisplay.ax.get_xlim())
+        #self.ui.graphDisplay.ax.callbacks.connect('xlim_changed', lambda event: print('x:', self.ui.graphDisplay.ax.get_xlim()))
+        self.ui.graphDisplay.ax.callbacks.connect('xlim_changed', lambda event: self.ui.graphDisplay.redrawPlot())
 
     # Funkcja obsługująca dodawanie do wyrażenia matematycznego odpowiednie formuły matematyczne przypisane do guzików
     def setupButtons(self):
