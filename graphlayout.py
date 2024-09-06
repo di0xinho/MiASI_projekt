@@ -149,22 +149,29 @@ class GraphLayout:
         # example:
         x = sp.symbols('x')  # variable
         f = sp.sin(x) + sp.cos(x)  # function
-        
-        # convert to numeric
-        f_num = sp.lambdify(x, f)
-        self.f_num = f_num
-        self.f_col = 'red' # TODO przypisywanie kolorów, bez tego przy przesuwaniu wykresu kolor się bardzo szybko zmienia
-        x_vals = np.linspace(-10, 10, 10000) # thanks to redrawPlot view is not limited to [-10,10].
-        y_vals = f_num(x_vals)
 
+        self.setPlot(x, f)
+        pass
+
+    # TODO can it draw multiple functions??
+
+    def setPlot(self, sympy_var, sympy_fun, color='red'):
+        'sympy_var - example: sp.symbols(\'x\'), sympy_fun - sympy function'
+        # convert to numeric
+        f_num = sp.lambdify(sympy_var, sympy_fun)
+        self.f_num = f_num
+        self.f_col = color # TODO przypisywanie kolorów, bez tego przy przesuwaniu wykresu kolor się bardzo szybko zmienia
+        x_vals = np.linspace(-10, 10, 10000) # begin view with x from -10 to 10 visible
+        y_vals = f_num(x_vals)
+        
         # plot
         self.ax.plot(x_vals, y_vals, color = self.f_col)
         self.ax.set_xlabel('x',)
         self.ax.set_ylabel('f(x)')
         self.ax.set_title('Plot of f(x)')
-        #self.ax.show()
         self.draw()
         pass
+
 
     def redrawPlot(self):
         "when graph view is moved it has to be redrawn"

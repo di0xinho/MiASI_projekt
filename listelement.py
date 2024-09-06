@@ -15,11 +15,12 @@ def prepareWidget(n):
 	widget = QWidget()
 	layout = QHBoxLayout()
 	check = QCheckBox(f"I'm no.{n}")
-	#grLayout = GraphLayout()
-	#grLayout.typeFormula(funbegin)
+	grLayout = GraphLayout()	# TODO shrink graphlayout at least 3x
+	grLayout.typeFormula(funbegin)
 	layout.addWidget(check)
-	#layout.addWidget(grLayout)
+	layout.addLayout(grLayout.getLayout())
 	widget.setLayout(layout)
+	# TODO add buttons such as edit, delete, color?
 	return widget
 
 # lista wyników albo funkcji - historyList, graphList
