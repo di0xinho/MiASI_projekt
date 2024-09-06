@@ -1,4 +1,7 @@
-
+from constants import MAINFILE
+if __name__ == "__main__":
+    print(f"\nTo start calculator run {MAINFILE} file.\n")
+    exit(0)
 
 from PySide6.QtWidgets import (QComboBox, QLabel,
     QPushButton, QSpinBox, QVBoxLayout, QHBoxLayout, QBoxLayout)
@@ -150,7 +153,7 @@ class GraphLayout:
         # convert to numeric
         f_num = sp.lambdify(x, f)
         self.f_num = f_num
-        self.f_col = 'red'
+        self.f_col = 'red' # TODO przypisywanie kolorów, bez tego przy przesuwaniu wykresu kolor się bardzo szybko zmienia
         x_vals = np.linspace(-10, 10, 10000) # thanks to redrawPlot view is not limited to [-10,10].
         y_vals = f_num(x_vals)
 

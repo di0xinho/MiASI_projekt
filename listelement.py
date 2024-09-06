@@ -1,3 +1,7 @@
+from constants import MAINFILE
+if __name__ == "__main__":
+    print(f"\nTo start calculator run {MAINFILE} file.\n")
+    exit(0)
 
 from PySide6.QtWidgets import (QPushButton, QScrollArea, QHBoxLayout,
 	QSizePolicy, QStatusBar, QWidget, QListWidgetItem, QListWidget, QCheckBox)
