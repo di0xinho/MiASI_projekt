@@ -37,7 +37,7 @@ def setupTab2(parent):
     # nof columns and rows for tab2Layout. For now assume 8x6
 
     # function list
-    parent.funcList = listelement.GraphList(parent.tab2) # not ui thing
+    parent.funcList = listelement.GraphList(parent.tab2) # not ui element
     parent.funcList.prepareExample()
     parent.functionScroll = parent.funcList.list_widget
     parent.functionScroll.setObjectName(u"functionScroll")

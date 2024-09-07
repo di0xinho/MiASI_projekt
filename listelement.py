@@ -3,31 +3,40 @@ if __name__ == "__main__":
     print(f"\nTo start calculator run {MAINFILE} file.\n")
     exit(0)
 
+from PySide6.QtCore import QSize, Qt
+#from PySide6.QtGui import 
 from PySide6.QtWidgets import (QPushButton, QScrollArea, QHBoxLayout,
 	QSizePolicy, QStatusBar, QWidget, QListWidgetItem, QListWidget, QCheckBox)
 from graphlayout import GraphLayout
 
-funbegin = "f(x) = "
+funbegin = "f(x) = 38 * 5 / 7 * \pi * \cos(54) - 783314 + 4,5 * 10^{12} + 38 * 5 / 7 * \pi * \cos(54) - 783314 + 4,5 * 10^{12}"
 
 # tworzy widget
-def prepareWidget(n):
+def prepareWidget(n) -> QWidget:
 	"Widget will be horizontal box with checkbox, formula and options (3 dots)"
 	widget = QWidget()
 	layout = QHBoxLayout()
-	check = QCheckBox(f"I'm no.{n}")
-	grLayout = GraphLayout()	# TODO shrink graphlayout at least 3x
-	grLayout.typeFormula(funbegin)
+	check = QCheckBox(f"f_{n}")
+	check.setMaximumSize(QSize(80, 120))
+	grLayout = GraphLayout()
+	grLayout.typeFormula(funbegin, 12, 'left', True)
 	layout.addWidget(check)
-	layout.addLayout(grLayout.getLayout())
+	grLayout.graph.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+	layout.addWidget(grLayout.graph)
+	#layout.addLayout(grLayout.getLayout())
 	widget.setLayout(layout)
+	widget.setMaximumHeight(120)
 	# TODO add buttons such as edit, delete, color?
 	return widget
 
+# TODO align text to left
+
 # lista wyników albo funkcji - historyList, graphList
 class GraphList: # misleading name
-	"List of graphs. Can be used to display calc history or function formula"
+	"List of graphs. Can be used to display calc history or function formulas"
 	def __init__(self, parent):
 		self.list_widget = QListWidget(parent)
+		print('list size:', self.list_widget.size(), 'list hint: ', self.list_widget.sizeHint())
 		self.widgets = []
 	def prepareExample(self):
 		for i in range(3):
@@ -36,9 +45,11 @@ class GraphList: # misleading name
 			self.addWidget(widget)
 		pass
 	# dodaj element do listy
-	def addWidget(self, widget):
+	def addWidget(self, widget: QWidget):
+		"add widget to list in interface"
 		item = QListWidgetItem(self.list_widget)
-		item.setSizeHint(widget.sizeHint()) # ?
+		item.setTextAlignment(Qt.AlignmentFlag.AlignLeft)
+		item.setSizeHint(QSize(self.list_widget.sizeHint().width(), widget.size().height()))
 		self.list_widget.setItemWidget(item, widget)
 	pass
 

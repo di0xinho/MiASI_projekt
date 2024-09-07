@@ -29,7 +29,7 @@ allActionsMap = {
 }
 """Map of actions that `NavigationToolbar` contains by default"""
 
-formulaActionKeys = [0,4,8,9,10]
+formulaActionKeys = [0,4,8] # ,9,10
 """Indexes of actions that toolbar for displaying math formulas should have."""
 
 class GraphLayout:
@@ -54,12 +54,27 @@ class GraphLayout:
         shortToolbar = True
         if plotMode:
             shortToolbar = False
-            self.plotMode = True
             # connected 'xlim_changed' callback to GraphLayout.redrawPlot() in MainWindow. For some reason it has to be this way :/
         if self.withToolbar:
             toolbar = self.graph_nav_menu
             if shortToolbar:
                 removeActionsFromToolbar(toolbar, formulaActionKeys)
+        pass
+
+    def listMode(self):
+        # withToolbar = False
+        # smaller font!
+        # smaller size!
+        pass
+
+    def plotMode(self):
+        # withToolbar = True
+        # shortToolbar = False
+        pass
+
+    def mathMode(self):
+        # withToolbar = True
+        # shortToolbar = True
         pass
 
     def __populateGraphLayout(self, parentLayout: QBoxLayout, withToolbar: bool):
@@ -72,7 +87,8 @@ class GraphLayout:
         This Layout must be QHBoxLayout or QVBoxLayout.
         """
         # graph
-        self.graph = FigureCanvas(Figure(figsize=(5, 3))) # graph
+        #self.graph = FigureCanvas(Figure(figsize=(5, 3))) # graph
+        self.graph = FigureCanvas(Figure(figsize=(3, 1))) # graph
         self.graph.setObjectName(u"graph")
         
         self.withToolbar = withToolbar
@@ -108,18 +124,21 @@ class GraphLayout:
         self.draw()
         pass
 
-    def typeFormula(self, mathFormula: str, fontSize=20):
+    def typeFormula(self, mathFormula: str, fontSize=20, alignText='center', toLeft=False):
         """
         Display math formula written in LateX format.
         Instead of using widget for displaying graphs, use it for
         displaying mathematical formulas written in LateX.
+        \nalign text: 'left' / 'center' / 'right'
         """
         latexText = mathFormula
-        print('Change text')
         try:
             self.ax.clear()
             self.ax.axis('off')
-            self.ax.text(0.5, 0.5, f"${latexText}$", size=fontSize, ha='center', va='center') # **kwargs: matplotlib.text.Text properties
+            x = 0.5
+            if toLeft:
+                x = -0.15
+            self.ax.text(x, 0.5, f"${latexText}$", size=fontSize, ha=alignText, va='center') # **kwargs: matplotlib.text.Text properties
             #self.ax.tight()
             self.draw()
         except:
@@ -132,7 +151,7 @@ class GraphLayout:
         This can be used to set some hints.
         For setting math formulas use typeFormula
         """
-        print('Change text')
+        #print('Change text')
         try:
             self.ax.clear()
             self.ax.axis('off')
@@ -140,7 +159,8 @@ class GraphLayout:
             self.ax.tight()
             self.draw()
         except:
-            print("Some exception occurred")
+            #print("Some exception occurred")
+            pass
         pass
 
     def plotExample(self):
