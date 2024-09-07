@@ -30,7 +30,7 @@ class MainWindow(QMainWindow):
         self.ui.graphDisplay.ax.callbacks.connect('xlim_changed', lambda event: self.ui.graphDisplay.redrawPlot())
 
         # Dodajemy obsługę kliknięcia przycisku "="
-        self.ui.tab1Buttons['='].clicked.connect(lambda: onEqualClick(parent, self.current_expression))
+        self.ui.tab1Buttons['='].clicked.connect(lambda: onEqualClick(self, parent))
         # Obsługa kliknięcia przycisku usuwającego ostatni znak
         self.ui.tab1Buttons['Usuń ostatni znak'].clicked.connect(self.removeLastCharacter)
         # Obsługa kliknięcia przycisku usuwającego całe wyrażenie matematyczne
