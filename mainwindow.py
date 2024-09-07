@@ -9,6 +9,7 @@ import importlib as imp
 #     pyside6-uic form.ui -o ui_form.py, or
 #     pyside2-uic form.ui -o ui_form.py
 from ui_form import Ui_MainWindow
+from helpers import onEqualClick
 
 # for debugging
 import time
@@ -28,16 +29,36 @@ class MainWindow(QMainWindow):
         #self.ui.graphDisplay.ax.callbacks.connect('xlim_changed', lambda event: print('x:', self.ui.graphDisplay.ax.get_xlim()))
         self.ui.graphDisplay.ax.callbacks.connect('xlim_changed', lambda event: self.ui.graphDisplay.redrawPlot())
 
+        # Dodajemy obsługę kliknięcia przycisku "="
+        self.ui.tab1Buttons['='].clicked.connect(lambda: onEqualClick(parent, self.current_expression))
+        # Obsługa kliknięcia przycisku usuwającego ostatni znak
+        self.ui.tab1Buttons['Usuń ostatni znak'].clicked.connect(self.removeLastCharacter)
+        # Obsługa kliknięcia przycisku usuwającego całe wyrażenie matematyczne
+        self.ui.tab1Buttons['Usuń całe wyrażenie'].clicked.connect(self.removeExpression)
+
     # Funkcja obsługująca dodawanie do wyrażenia matematycznego odpowiednie formuły matematyczne przypisane do guzików
     def setupButtons(self):
         for text, button in self.ui.tab1Buttons.items():
-            if text != '=':
+            if text not in ['=', 'Usuń ostatni znak', 'Usuń całe wyrażenie']:
                 button.clicked.connect(lambda ch, t=text: self.addToExpression(t))
     
     # Dodawanie do wyrażenia odpowiednich formuł matematycznych
     def addToExpression(self, text):
         self.current_expression += text
         self.ui.mathFormula.typeFormula(self.current_expression)
+
+    # Usuwanie ostatniego znaku z formuły matematycznej
+    def removeLastCharacter(self):
+        if len(self.current_expression) > 0:
+            self.current_expression = self.current_expression[:-1]
+            self.ui.mathFormula.typeFormula(self.current_expression)
+            print("Usuwam")
+
+    # Usuwanie całego wyrażenia matematycznego
+    def removeExpression(self):
+        if len(self.current_expression) != 0:
+            self.current_expression = ""
+            self.ui.mathFormula.typeFormula(self.current_expression)
 
 def checklibs():
     pkgs = ['PySide6', 'matplotlib'] # later 'numpy' will join the list

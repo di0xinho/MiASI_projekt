@@ -98,12 +98,10 @@ def populateKeyBoardGrid(parent):
     ] + helpBT.inserter(
         [f'{x}' for x in range(10)], # lista cyfr
         [(1, '/'), (4+1, '*'), (7+2, '+'), (10+3, '-')] # te liczby: przed jaką cyfrą wstawić element, to po +: ile już wstawiono. 10 nie ma, ale chodzi o to, że za 9
-    ) + ['='] # Dodajemy przycisk "=" na końcu listy
+    ) + ['x', 'y'] + ['='] + ['Usuń ostatni znak', 'Usuń całe wyrażenie'] 
 
     keyboardMaker = helpBT.KeboardHelp(parent.keyboardGrid1, parent.tab1Buttons)
     keyboardMaker.addButtons(scientifcKeyboard, 4)
     # Now, buttons are stored in parent.tab1Buttons map. To get tan button for example: parent.tab1Buttons['tan']
-
-    parent.tab1Buttons['='].clicked.connect(lambda: onEqualClick(parent)) # Dodajemy obsługę kliknięcia przycisku "="
 
     pass
