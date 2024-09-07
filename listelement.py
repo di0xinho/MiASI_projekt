@@ -5,7 +5,7 @@ if __name__ == "__main__":
 
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import (QPushButton, QScrollArea, QHBoxLayout,
+from PySide6.QtWidgets import (QPushButton, QScrollArea, QHBoxLayout, QVBoxLayout,
 	QSizePolicy, QStatusBar, QWidget, QListWidgetItem, QListWidget, QCheckBox)
 from graphlayout import GraphLayout
 
@@ -30,6 +30,15 @@ def prepareWidgetFunc(n) -> QWidget:
 	widget.setLayout(layout)
 	widget.setMaximumHeight(120)
 	# TODO add buttons such as edit, delete, color?
+	editButt = QPushButton()
+	editButt.setIcon(QIcon("edit_24dp.png"))
+	delButt = QPushButton()
+	delButt.setIcon(QIcon("delete_24dp.png"))
+	buttLayout = QVBoxLayout()
+	buttLayout.addWidget(editButt)
+	buttLayout.addWidget(delButt)
+	layout.addLayout(buttLayout)
+	# maybe add home and move from graphtoolbar to buttLayout?
 	return widget
 
 def prepareWidgetHist(n) -> QWidget:
@@ -43,11 +52,8 @@ def prepareWidgetHist(n) -> QWidget:
 	grLayout.graph.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 	layout.addWidget(grLayout.graph)
 	# delete button
-	button = QPushButton('X') # I didn't found Any trash/delete icon and "built in" ones don't work
-	button.setMaximumWidth(24)
-	#button = QPushButton('delete')
-	#button.setIcon(QIcon.fromTheme("trash")) # wasFIXME does not display builtin icon
-	#button.setText('')
+	button = QPushButton()
+	button.setIcon(QIcon("delete_24dp.png"))
 	layout.addWidget(button)
 	widget.setLayout(layout)
 	widget.setMaximumHeight(120)
@@ -63,6 +69,24 @@ class GraphList: # misleading name
 		self.list_widget = QListWidget(parent)
 		self.history_mode=historyMode
 		self.widgets = []
+		self.createButton()
+
+	def createButton(self):
+		widget = QWidget()
+		button = QPushButton()
+		if self.history_mode:
+			button.setText(u'Wyczyść historię')
+		else:
+			button.setIcon(QIcon("add_24dp.png"))
+		layout = QHBoxLayout() # will contain one thing
+		layout.addWidget(button)
+		widget.setLayout(layout)
+		self.widgets.append(widget)
+		item = QListWidgetItem(self.list_widget)
+		item.setTextAlignment(Qt.AlignmentFlag.AlignLeft)
+		item.setSizeHint(QSize(self.list_widget.sizeHint().width(), 40))
+		self.list_widget.setItemWidget(item, widget)
+		pass
 
 	def prepareFuncExample(self):
 		for i in range(3):
@@ -77,11 +101,13 @@ class GraphList: # misleading name
 
 	# dodaj element do listy
 	def addWidget(self, widget: QWidget):
+		insertAt=1
 		"Add widget to list in interface. Works for both history and functions"
-		self.widgets.append(widget)
-		item = QListWidgetItem(self.list_widget)
+		self.widgets.insert(insertAt, widget)
+		item = QListWidgetItem()
 		item.setTextAlignment(Qt.AlignmentFlag.AlignLeft)
 		item.setSizeHint(QSize(self.list_widget.sizeHint().width(), widget.size().height()))
+		self.list_widget.insertItem(insertAt, item)
 		self.list_widget.setItemWidget(item, widget)
 		pass
 	def editWidget(self):

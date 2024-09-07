@@ -46,18 +46,19 @@ class GraphLayout:
     """
     
     def __init__(self, withToolbar = False, plotMode = False) -> None:
+        self.withToolbar = withToolbar
+        self.shortToolbar = True
+        if plotMode:
+            self.shortToolbar = False
+            # connected 'xlim_changed' callback to GraphLayout.redrawPlot() in MainWindow. For some reason it has to be this way :/
         self.__graphLayout = QVBoxLayout()
-        self.__populateGraphLayout(self.__graphLayout, withToolbar)
+        self.__populateGraphLayout(self.__graphLayout)
         self.ax = self.graph.figure.subplots()
         self.draw: function = self.graph.figure.canvas.draw
         self.draw()
-        shortToolbar = True
-        if plotMode:
-            shortToolbar = False
-            # connected 'xlim_changed' callback to GraphLayout.redrawPlot() in MainWindow. For some reason it has to be this way :/
         if self.withToolbar:
             toolbar = self.graph_nav_menu
-            if shortToolbar:
+            if self.shortToolbar:
                 removeActionsFromToolbar(toolbar, formulaActionKeys)
         pass
 
@@ -77,7 +78,7 @@ class GraphLayout:
         # shortToolbar = True
         pass
 
-    def __populateGraphLayout(self, parentLayout: QBoxLayout, withToolbar: bool):
+    def __populateGraphLayout(self, parentLayout: QBoxLayout):
         """
         This function populates parentLayout with
         graph navigation Toolbar and graph itself.
@@ -90,12 +91,14 @@ class GraphLayout:
         #self.graph = FigureCanvas(Figure(figsize=(5, 3))) # graph
         self.graph = FigureCanvas(Figure(figsize=(3, 1))) # graph
         self.graph.setObjectName(u"graph")
-        
-        self.withToolbar = withToolbar
+
         # graph nav menu
-        if withToolbar:
+        if self.withToolbar:
             self.graph_nav_menu = NavigationToolbar(self.graph) # , self.centralwidget
             self.graph_nav_menu.setObjectName(u"graph_nav_menu")
+            self.graph_nav_menu.setMaximumWidth(280)
+            if self.shortToolbar:
+                self.graph_nav_menu.setMaximumWidth(100)
             parentLayout.addWidget(self.graph_nav_menu)
 
         parentLayout.addWidget(self.graph)
