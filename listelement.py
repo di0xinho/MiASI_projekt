@@ -4,7 +4,7 @@ if __name__ == "__main__":
     exit(0)
 
 from PySide6.QtCore import QSize, Qt
-#from PySide6.QtGui import 
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (QPushButton, QScrollArea, QHBoxLayout,
 	QSizePolicy, QStatusBar, QWidget, QListWidgetItem, QListWidget, QCheckBox)
 from graphlayout import GraphLayout
@@ -37,11 +37,18 @@ def prepareWidgetHist(n) -> QWidget:
 	Widget will be horizontal box with calculated result and options (3 dots)"""
 	widget = QWidget()
 	layout = QHBoxLayout()
+	# formula view
 	grLayout = GraphLayout()
 	grLayout.typeFormula(histexample, 12, 'left', True)
 	grLayout.graph.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 	layout.addWidget(grLayout.graph)
-	#layout.addLayout(grLayout.getLayout())
+	# delete button
+	button = QPushButton('X') # I didn't found Any trash/delete icon and "built in" ones don't work
+	button.setMaximumWidth(24)
+	#button = QPushButton('delete')
+	#button.setIcon(QIcon.fromTheme("trash")) # wasFIXME does not display builtin icon
+	#button.setText('')
+	layout.addWidget(button)
 	widget.setLayout(layout)
 	widget.setMaximumHeight(120)
 	# TODO add button to copy or delete
