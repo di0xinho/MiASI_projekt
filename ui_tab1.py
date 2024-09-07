@@ -79,8 +79,8 @@ def setupTab1(parent, totalHeight = 0):
         parent.keyGridWidget1.setMaximumHeight(totalHeight//2) # 3/6
 
     # history list
-    parent.histList = listelement.GraphList(parent.tab1) # not ui thing
-    parent.histList.prepareExample()
+    parent.histList = listelement.GraphList(parent.tab1, historyMode=True) # not ui thing
+    parent.histList.prepareHistExample()
     parent.historyScroll = parent.histList.list_widget
     parent.historyScroll.setObjectName(u"historyScroll")
     parent.tab1Layout.addWidget(parent.historyScroll, 0, 5, 6, 3) # row, column, rowSpan, columnSpan. occupy whole column
