@@ -31,6 +31,7 @@ class MainWindow(QMainWindow):
         self.ui.tab1Buttons['Usuń ostatni znak'].clicked.connect(self.removeLastCharacter)
         # Obsługa kliknięcia przycisku usuwającego całe wyrażenie matematyczne
         self.ui.tab1Buttons['Usuń całe wyrażenie'].clicked.connect(self.removeExpression)
+        # FIXME remove everything does not delete anything until something new is typed
 
     # Funkcja obsługująca dodawanie do wyrażenia matematycznego odpowiednie formuły matematyczne przypisane do guzików
     def setupButtons(self):
@@ -45,10 +46,11 @@ class MainWindow(QMainWindow):
 
     # Usuwanie ostatniego znaku z formuły matematycznej
     def removeLastCharacter(self):
+        # FIXME when deleting for example cos it removes only s XD
         if len(self.current_expression) > 0:
             self.current_expression = self.current_expression[:-1]
             self.ui.mathFormula.typeFormula(self.current_expression)
-            print("Usuwam")
+            print("Usuwam") # remove debug message
 
     # Usuwanie całego wyrażenia matematycznego
     def removeExpression(self):
