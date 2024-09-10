@@ -28,15 +28,15 @@ class MainWindow(QMainWindow):
         # Dodajemy obsługę kliknięcia przycisku "="
         self.ui.tab1Buttons['='].clicked.connect(lambda: onEqualClick(self, parent))
         # Obsługa kliknięcia przycisku usuwającego ostatni znak
-        self.ui.tab1Buttons['Usuń ostatni znak'].clicked.connect(self.removeLastCharacter)
+        self.ui.tab1Buttons['C'].clicked.connect(self.removeLastCharacter)
         # Obsługa kliknięcia przycisku usuwającego całe wyrażenie matematyczne
-        self.ui.tab1Buttons['Usuń całe wyrażenie'].clicked.connect(self.removeExpression)
+        self.ui.tab1Buttons['AC'].clicked.connect(self.removeExpression)
         # FIXME remove everything does not delete anything until something new is typed
 
     # Funkcja obsługująca dodawanie do wyrażenia matematycznego odpowiednie formuły matematyczne przypisane do guzików
     def setupButtons(self):
         for text, button in self.ui.tab1Buttons.items():
-            if text not in ['=', 'Usuń ostatni znak', 'Usuń całe wyrażenie']:
+            if text not in ['=', 'C', 'AC']:
                 button.clicked.connect(lambda ch, t=text: self.addToExpression(t))
     
     # Dodawanie do wyrażenia odpowiednich formuł matematycznych

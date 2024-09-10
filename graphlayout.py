@@ -4,7 +4,7 @@ if __name__ == "__main__":
     exit(0)
 
 from PySide6.QtWidgets import (QComboBox, QLabel,
-    QPushButton, QSpinBox, QVBoxLayout, QHBoxLayout, QBoxLayout)
+    QPushButton, QSpinBox, QVBoxLayout, QHBoxLayout, QBoxLayout, QMessageBox)
 
 from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.figure import Figure
