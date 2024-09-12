@@ -14,13 +14,13 @@ funbegin = "f(x) = "
 histexample = 'result'
 
 # tworzy widget
-def prepareWidgetFunc(n, parent_list) -> QWidget:
+def prepareWidgetFunc(n, parent_list, result = funexample) -> QWidget:
     """Widget listing function formulas."""
     widget = QWidget()
     layout = QHBoxLayout()
     check = QCheckBox(f"f_{n}")
     grLayout = GraphLayout()
-    grLayout.typeFormula(funexample, 12, 'left', True)
+    grLayout.typeFormula(result, 12, 'left', True)
     layout.addWidget(check)
     layout.addWidget(grLayout.graph)
 
@@ -42,12 +42,12 @@ def prepareWidgetFunc(n, parent_list) -> QWidget:
     return widget
 
 
-def prepareWidgetHist(n, parent_list) -> QWidget:
+def prepareWidgetHist(n, parent_list, result = histexample) -> QWidget:
     """Widget listing calculation history."""
     widget = QWidget()
     layout = QHBoxLayout()
     grLayout = GraphLayout()
-    grLayout.typeFormula(histexample, 12, 'left', True)
+    grLayout.typeFormula(result, 12, 'left', True)
     layout.addWidget(grLayout.graph)
 
     button = QPushButton()

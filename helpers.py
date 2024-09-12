@@ -1,5 +1,7 @@
 # W tym pliku będą mieścić się pomocnicze funkcje
 from calculationfunctions import calculate_expression
+from graphlayout import GraphLayout
+import listelement
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QPushButton
 
@@ -10,7 +12,19 @@ def onEqualClick(parent):
         result, latex_expression = calculate_expression(parent.current_expression, vars)
         print(result)
         parent.answerFormula.typeFormula(result)
-        # parent.addToHistory(parent.current_expression, result)
+        
+        # Rozwiązanie równania dodawane do historii, czyli format - "formuła matematyczna = wynik"
+        full_result = parent.current_expression + " = " + str(result)
+
+        # Stworzenie nowego elementu historii
+        new_history_item = listelement.prepareWidgetHist(0, parent.histList, full_result)
+
+        # Dodanie wyrażenia i wyniku do historii
+        parent.histList.addWidget(new_history_item)
+        
+        # Usuwanie formuły matematycznej z pola wprowadzania wyrażenia po dodaniu do historii 
+        removeExpression(parent)
+
     except Exception as e:
         dlg = QMessageBox(parent)
         dlg.setWindowTitle("Niepoprawna formuła matematyczna")

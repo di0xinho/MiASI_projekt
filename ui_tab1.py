@@ -78,7 +78,6 @@ def setupTab1(parent, totalHeight = 0):
 
     # history list
     parent.histList = listelement.GraphList(parent.tab1, historyMode=True) # not ui thing
-    parent.histList.prepareHistExample()
     parent.historyScroll = parent.histList.list_widget
     parent.historyScroll.setObjectName(u"historyScroll")
     parent.tab1Layout.addWidget(parent.historyScroll, 0, 5, 6, 3) # row, column, rowSpan, columnSpan. occupy whole column
@@ -112,6 +111,5 @@ def populateKeyBoardGrid(parent):
 
     keyboardMaker = helpBT.KeboardHelp(parent.keyboardGrid1, parent.tab1Buttons)
     keyboardMaker.addButtons(scientifcKeyboard, 4)
-    # Now, buttons are stored in parent.tab1Buttons map. To get tan button for example: parent.tab1Buttons['tan']
 
     pass
