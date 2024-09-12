@@ -78,6 +78,7 @@ class GraphList: # misleading name
 		button = QPushButton()
 		if self.history_mode:
 			button.setText(u'Wyczyść historię')
+			button.clicked.connect(self.clearHistory)  # Połącz guzik z funkcją czyszczenia historii
 		else:
 			button.setIcon(QIcon("add_24dp.png"))
 		layout = QHBoxLayout() # will contain one thing
@@ -132,6 +133,16 @@ class GraphList: # misleading name
 				# widget.deleteLater()  # Opcjonalnie, jeśli chcesz usunąć widget całkowicie
 				break
 			pass
+
+	def clearHistory(self):
+		"""Usuwa wszystkie elementy z historii oprócz przycisku, który również znajduje się w tablicy widgetów"""
+		# Usuwamy wszystkie elementy z listy zaczynając od 1 (indeks 0 to przycisk)
+		for i in range(1, self.list_widget.count()):
+			self.list_widget.takeItem(1)  # Usuwa drugi element (indeks 1), bo lista się dynamicznie skraca
+
+		# Usuwamy odpowiadające elementy z listy self.widgets, zostawiając przycisk na pozycji 0
+		self.widgets = self.widgets[:1]
+
 	pass
 
 # TODO element listy z wszystkimi feature'ami wypisanymi poniżej
