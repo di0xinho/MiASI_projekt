@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QMainWindow, QMenuBar,
     QLabel, QHBoxLayout, QVBoxLayout)
 
 from graphlayout import GraphLayout
-from helpers import onEqualClick
+from helpers import onEqualClick, setupButtons, addToExpression, removeExpression, removeLastCharacter
 import helpbuttons as helpBT
 import listelement
 
@@ -82,6 +82,18 @@ def setupTab1(parent, totalHeight = 0):
     parent.historyScroll = parent.histList.list_widget
     parent.historyScroll.setObjectName(u"historyScroll")
     parent.tab1Layout.addWidget(parent.historyScroll, 0, 5, 6, 3) # row, column, rowSpan, columnSpan. occupy whole column
+
+    parent.current_expression = ""
+    setupButtons(parent)
+
+    # Dodajemy obsługę kliknięcia przycisku "="
+    parent.tab1Buttons['='].clicked.connect(lambda: onEqualClick(parent))
+    # Obsługa kliknięcia przycisku usuwającego ostatni znak
+    parent.tab1Buttons['C'].clicked.connect(lambda: removeLastCharacter(parent))
+    # Obsługa kliknięcia przycisku usuwającego całe wyrażenie matematyczne
+    parent.tab1Buttons['AC'].clicked.connect(lambda: removeExpression(parent))
+    # FIXME remove everything does not delete anything until something new is typed
+
     pass
 
 def populateKeyBoardGrid(parent):

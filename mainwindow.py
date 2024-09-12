@@ -21,42 +21,42 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
 
         # Jak narazie pozostawię tą zmienną i wywołanie funkcji w tym pliku - raczej trzeba będzie to przenieść gdzieś indziej
-        self.current_expression = "" # Dodajemy atrybut do przechowywania aktualnego wyrażenia
-        self.setupButtons()
+        # self.current_expression = "" # Dodajemy atrybut do przechowywania aktualnego wyrażenia
+        # self.setupButtons()
         self.ui.graphDisplay.ax.callbacks.connect('xlim_changed', lambda event: self.ui.graphDisplay.redrawPlot())
 
-        # Dodajemy obsługę kliknięcia przycisku "="
-        self.ui.tab1Buttons['='].clicked.connect(lambda: onEqualClick(self, parent))
-        # Obsługa kliknięcia przycisku usuwającego ostatni znak
-        self.ui.tab1Buttons['C'].clicked.connect(self.removeLastCharacter)
-        # Obsługa kliknięcia przycisku usuwającego całe wyrażenie matematyczne
-        self.ui.tab1Buttons['AC'].clicked.connect(self.removeExpression)
-        # FIXME remove everything does not delete anything until something new is typed
+        # # Dodajemy obsługę kliknięcia przycisku "="
+        # self.ui.tab1Buttons['='].clicked.connect(lambda: onEqualClick(self, parent))
+        # # Obsługa kliknięcia przycisku usuwającego ostatni znak
+        # self.ui.tab1Buttons['C'].clicked.connect(self.removeLastCharacter)
+        # # Obsługa kliknięcia przycisku usuwającego całe wyrażenie matematyczne
+        # self.ui.tab1Buttons['AC'].clicked.connect(self.removeExpression)
+        # # FIXME remove everything does not delete anything until something new is typed
 
-    # Funkcja obsługująca dodawanie do wyrażenia matematycznego odpowiednie formuły matematyczne przypisane do guzików
-    def setupButtons(self):
-        for text, button in self.ui.tab1Buttons.items():
-            if text not in ['=', 'C', 'AC']:
-                button.clicked.connect(lambda ch, t=text: self.addToExpression(t))
+    # # Funkcja obsługująca dodawanie do wyrażenia matematycznego odpowiednie formuły matematyczne przypisane do guzików
+    # def setupButtons(self):
+    #     for text, button in self.ui.tab1Buttons.items():
+    #         if text not in ['=', 'C', 'AC']:
+    #             button.clicked.connect(lambda ch, t=text: self.addToExpression(t))
     
-    # Dodawanie do wyrażenia odpowiednich formuł matematycznych
-    def addToExpression(self, text):
-        self.current_expression += text
-        self.ui.mathFormula.typeFormula(self.current_expression)
+    # # Dodawanie do wyrażenia odpowiednich formuł matematycznych
+    # def addToExpression(self, text):
+    #     self.current_expression += text
+    #     self.ui.mathFormula.typeFormula(self.current_expression)
 
-    # Usuwanie ostatniego znaku z formuły matematycznej
-    def removeLastCharacter(self):
-        # FIXME when deleting for example cos it removes only s XD
-        if len(self.current_expression) > 0:
-            self.current_expression = self.current_expression[:-1]
-            self.ui.mathFormula.typeFormula(self.current_expression)
-            print("Usuwam") # remove debug message
+    # # Usuwanie ostatniego znaku z formuły matematycznej
+    # def removeLastCharacter(self):
+    #     # FIXME when deleting for example cos it removes only s XD
+    #     if len(self.current_expression) > 0:
+    #         self.current_expression = self.current_expression[:-1]
+    #         self.ui.mathFormula.typeFormula(self.current_expression)
+    #         print("Usuwam") # remove debug message
 
-    # Usuwanie całego wyrażenia matematycznego
-    def removeExpression(self):
-        if len(self.current_expression) != 0:
-            self.current_expression = ""
-            self.ui.mathFormula.typeFormula(self.current_expression)
+    # # Usuwanie całego wyrażenia matematycznego
+    # def removeExpression(self):
+    #     if len(self.current_expression) != 0:
+    #         self.current_expression = ""
+    #         self.ui.mathFormula.typeFormula(self.current_expression)
 
 def checklibs():
     pkgs = ['PySide6', 'matplotlib'] # later 'numpy' will join the list
