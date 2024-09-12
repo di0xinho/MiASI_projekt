@@ -11,6 +11,7 @@ def onEqualClick(self, parent):
         vars = {'x': 1, 'y': 1}
         result, latex_expression = calculate_expression(self.current_expression, vars)
         self.ui.answerFormula.typeFormula(result)
+        # self.ui.historyScroll.clear()
         print(result)
     except Exception as e:
         # parent.answerFormula.setNormalText("Error")

@@ -14,51 +14,53 @@ funbegin = "f(x) = "
 histexample = 'result'
 
 # tworzy widget
-def prepareWidgetFunc(n) -> QWidget:
-	"""Widget listing function formulas.
-	Widget will be horizontal box with checkbox, formula and options (3 dots)"""
-	widget = QWidget()
-	layout = QHBoxLayout()
-	check = QCheckBox(f"f_{n}")
-	check.setMaximumSize(QSize(80, 120))
-	grLayout = GraphLayout()
-	grLayout.typeFormula(funexample, 12, 'left', True)
-	layout.addWidget(check)
-	grLayout.graph.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-	layout.addWidget(grLayout.graph)
-	#layout.addLayout(grLayout.getLayout())
-	widget.setLayout(layout)
-	widget.setMaximumHeight(120)
-	# TODO add buttons such as edit, delete, color?
-	editButt = QPushButton()
-	editButt.setIcon(QIcon("edit_24dp.png"))
-	delButt = QPushButton()
-	delButt.setIcon(QIcon("delete_24dp.png"))
-	buttLayout = QVBoxLayout()
-	buttLayout.addWidget(editButt)
-	buttLayout.addWidget(delButt)
-	layout.addLayout(buttLayout)
-	# maybe add home and move from graphtoolbar to buttLayout?
-	return widget
+def prepareWidgetFunc(n, parent_list) -> QWidget:
+    """Widget listing function formulas."""
+    widget = QWidget()
+    layout = QHBoxLayout()
+    check = QCheckBox(f"f_{n}")
+    grLayout = GraphLayout()
+    grLayout.typeFormula(funexample, 12, 'left', True)
+    layout.addWidget(check)
+    layout.addWidget(grLayout.graph)
 
-def prepareWidgetHist(n) -> QWidget:
-	"""Widget listing calculation history.
-	Widget will be horizontal box with calculated result and options (3 dots)"""
-	widget = QWidget()
-	layout = QHBoxLayout()
-	# formula view
-	grLayout = GraphLayout()
-	grLayout.typeFormula(histexample, 12, 'left', True)
-	grLayout.graph.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-	layout.addWidget(grLayout.graph)
-	# delete button
-	button = QPushButton()
-	button.setIcon(QIcon("delete_24dp.png"))
-	layout.addWidget(button)
-	widget.setLayout(layout)
-	widget.setMaximumHeight(120)
-	# TODO add button to copy or delete
-	return widget
+    editButt = QPushButton()
+    editButt.setIcon(QIcon("edit_24dp.png"))
+    delButt = QPushButton()
+    delButt.setIcon(QIcon("delete_24dp.png"))
+
+    # Łączenie przycisku z metodą usuwania widgetu
+    delButt.clicked.connect(lambda: parent_list.deleteWidget(widget))
+
+    buttLayout = QVBoxLayout()
+    buttLayout.addWidget(editButt)
+    buttLayout.addWidget(delButt)
+    layout.addLayout(buttLayout)
+    
+    widget.setLayout(layout)
+    widget.setMaximumHeight(120)
+    return widget
+
+
+def prepareWidgetHist(n, parent_list) -> QWidget:
+    """Widget listing calculation history."""
+    widget = QWidget()
+    layout = QHBoxLayout()
+    grLayout = GraphLayout()
+    grLayout.typeFormula(histexample, 12, 'left', True)
+    layout.addWidget(grLayout.graph)
+
+    button = QPushButton()
+    button.setIcon(QIcon("delete_24dp.png"))
+    
+    # Łączenie przycisku z metodą usuwania widgetu
+    button.clicked.connect(lambda: parent_list.deleteWidget(widget))
+
+    layout.addWidget(button)
+    widget.setLayout(layout)
+    widget.setMaximumHeight(120)
+    return widget
+
 
 # TODO align text to left
 
@@ -88,16 +90,20 @@ class GraphList: # misleading name
 		self.list_widget.setItemWidget(item, widget)
 		pass
 
+	# Dodawanie przykładów w postaci funkcji i wyników do historii
+
+	# Funkcje
 	def prepareFuncExample(self):
 		for i in range(3):
-			widget = prepareWidgetFunc(i)
+			widget = prepareWidgetFunc(i, self)  # Przekazana instancja GraphList
 			self.addWidget(widget)
-		pass
+
+	# Historia
 	def prepareHistExample(self):
 		for i in range(3):
-			widget = prepareWidgetHist(i)
+			widget = prepareWidgetHist(i, self)  # Przekazana instancja GraphList
 			self.addWidget(widget)
-		pass
+
 
 	# dodaj element do listy
 	def addWidget(self, widget: QWidget):
@@ -112,10 +118,20 @@ class GraphList: # misleading name
 		pass
 	def editWidget(self):
 		"when listing functions, there is an option to enter edit mode, to edit function"
+		print("Edytuje")
 		pass
-	def deleteWidget(self):
-		"simply delete from list"
-		pass
+	def deleteWidget(self, widget: QWidget):
+		"Usuwa wybrany widget z listy"
+		# Znajdujemy indeks elementu, który odpowiada podanemu widgetowi
+		for i in range(self.list_widget.count()):
+			item = self.list_widget.item(i)
+			if self.list_widget.itemWidget(item) == widget:
+				# Usuwamy element z listy
+				self.list_widget.takeItem(i)
+				self.widgets.remove(widget)  # Usuń widget z listy przechowywanych widgetów
+				# widget.deleteLater()  # Opcjonalnie, jeśli chcesz usunąć widget całkowicie
+				break
+			pass
 	pass
 
 # TODO element listy z wszystkimi feature'ami wypisanymi poniżej

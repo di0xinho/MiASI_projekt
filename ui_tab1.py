@@ -24,8 +24,6 @@ import listelement
 historyScroll = None
 """historyScroll is list of previously calculated equations"""
 
-
-
 def setupTab1(parent, totalHeight = 0):
     """
     Parameters:
