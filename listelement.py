@@ -9,7 +9,8 @@ from PySide6.QtWidgets import (QPushButton, QScrollArea, QHBoxLayout, QVBoxLayou
 	QSizePolicy, QStatusBar, QWidget, QListWidgetItem, QListWidget, QCheckBox)
 from graphlayout import GraphLayout
 
-funexample = "f(x) = 38 * 5 / 7 * \pi * \cos(54) - 783314 + 4,5 * 10^{12} + 38 * 5 / 7 * \pi * \cos(54) - 783314 + 4,5 * 10^{12}"
+# funexample = "f(x) = 38 * 5 / 7 * \pi * \cos(54) - 783314 + 4,5 * 10^{12} + 38 * 5 / 7 * \pi * \cos(54) - 783314 + 4,5 * 10^{12}"
+funexample = "x^2"
 funbegin = "f(x) = "
 histexample = 'result'
 
@@ -60,7 +61,6 @@ def prepareWidgetHist(n, parent_list, result = histexample) -> QWidget:
     widget.setLayout(layout)
     widget.setMaximumHeight(120)
     return widget
-
 
 # TODO align text to left
 

@@ -13,10 +13,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QGridLayout, QMainWindow, QMenuBar,
     QPushButton, QScrollArea, QSizePolicy, QStatusBar,
     QTabWidget, QWidget, QListWidget, QListWidgetItem,
-    QLabel, QHBoxLayout, QVBoxLayout)
+    QLabel, QHBoxLayout, QVBoxLayout, QCheckBox)
 
 from graphlayout import GraphLayout
 import listelement
+import sympy as sp
 import helpbuttons as helpBT
 
 functionScroll = None
@@ -61,7 +62,26 @@ def setupTab2(parent):
     parent.keyboardGrid2 = QGridLayout(parent.keyGridWidget2)
     parent.keyboardGrid2.setObjectName(u"keyboardGrid2")
     populateKeyboardGrid2(parent)
+
+    # Dodanie callbacka do elementu listy z checkboxem
+    for i in range(1, parent.functionScroll.count()):
+        list_widget = parent.functionScroll
+
+        checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
+
+        checkbox.stateChanged.connect(
+                lambda state: onFormulaSelected(state == 2)
+            )
     pass
+
+# Funkcja na checkbox change
+def onFormulaSelected(checked, formula = None):
+    if checked:
+        # parent.graphDisplay.setPlot(sp.symbols('x'), formula)
+        print("Zaznaczony")
+    else:
+        # Opcjonalnie możemy dodać kod, aby usunąć funkcję z wykresu
+        pass
 
 def populateKeyboardGrid2(parent):
     "Populate keyboard grid in tab 2."
@@ -69,9 +89,9 @@ def populateKeyboardGrid2(parent):
     # Here, keyboard will be a little different.
     # TODO modify keyboard to match function creation. x, y are certainly needed
     functionKeyboard = [
-        'Ułamek', '.', '(', ')', 
+        '.', '(', ')', 
         'sin', 'cos', 'tan', 'π',
-        'Potęga', '√', 'log', 'e',
+        '^', '√', 'log', 'e',
         'mod', 'abs'
     ] + helpBT.inserter(
         [f'{x}' for x in range(10)], # lista cyfr

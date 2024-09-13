@@ -50,7 +50,6 @@ def removeLastCharacter(parent):
     if len(parent.current_expression) > 0:
         parent.current_expression = parent.current_expression[:-1]
         parent.mathFormula.typeFormula(parent.current_expression)
-        print("Usuwam") # remove debug message
 
 # Usuwanie całego wyrażenia matematycznego
 def removeExpression(parent):
