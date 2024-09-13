@@ -1,4 +1,5 @@
 # W tym pliku będą mieścić się pomocnicze funkcje
+from PySide6.QtWidgets import QCheckBox
 from calculationfunctions import calculate_expression
 from graphlayout import GraphLayout
 import listelement
@@ -26,10 +27,10 @@ def onEqualClick(parent):
         removeExpression(parent)
 
     except Exception as e:
-        dlg = QMessageBox(parent)
+        dlg = QMessageBox()
         dlg.setWindowTitle("Niepoprawna formuła matematyczna")
         dlg.setText("Wprowadzono niepoprawny format wyrażenia matematycznego. Spróbuj poprawić formułę, aby zwrócić prawidłowy wynik.")
-        dlg.setStandardButtons(QMessageBox.Yes)
+        dlg.setStandardButtons(QMessageBox.Ok)
         dlg.setIcon(QMessageBox.Critical)
         button = dlg.exec()
 
@@ -55,8 +56,47 @@ def removeLastCharacter(parent):
 def removeExpression(parent):
     if len(parent.current_expression) != 0:
         parent.current_expression = ""
-        parent.mathFormula.typeFormula(parent.current_expression)    
+        parent.mathFormula.typeFormula(parent.current_expression)
 
+# Dodawanie funkcji do listy funkcji
+def onPlusClick(parent):
+    if(parent.functionScroll.count() < 7):
 
+        # Tworzenie nowej funkcji - forma tekstowa
+        full_result = "f(x)" + " = " + "x^3"
+
+        # Stworzenie nowego elementu do listy funkcji
+        new_function_item = listelement.prepareWidgetFunc(parent.function_number, parent.funcList, full_result)
+
+        # Inkrementacja numeru funkcji
+        parent.function_number += 1
+
+        # Dodanie wyrażenia i wyniku do listy funkcji
+        parent.funcList.addWidget(new_function_item)
+
+        # Dodanie callbacka do elementu listy z checkboxem
+        for i in range(1, parent.functionScroll.count()):
+
+            checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
+
+            checkbox.stateChanged.connect(
+                    lambda state: onFormulaSelected(state == 2) # state == 2 - oznacza to zaznaczenie checkboxa
+                )
+    else:
+        dlg = QMessageBox()
+        dlg.setWindowTitle("Przekroczono dozwolony limit funkcji")
+        dlg.setText("Możesz wprowadzić maksymalnie 6 funkcji.")
+        dlg.setStandardButtons(QMessageBox.Ok)
+        dlg.setIcon(QMessageBox.Information)
+        button = dlg.exec()
+
+# Funkcja rysująca wykres w przypadku zaznaczenia checkboxa
+def onFormulaSelected(checked, formula = None):
+    if checked:
+        # parent.graphDisplay.setPlot(sp.symbols('x'), formula)
+        print("Zaznaczony")
+    else:
+        # Opcjonalnie możemy dodać kod, aby usunąć funkcję z wykresu
+        pass
 
 

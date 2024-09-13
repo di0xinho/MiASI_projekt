@@ -19,6 +19,7 @@ from graphlayout import GraphLayout
 import listelement
 import sympy as sp
 import helpbuttons as helpBT
+from helpers import onPlusClick 
 
 functionScroll = None
 """functionScroll is list of user-defined functions"""
@@ -39,7 +40,7 @@ def setupTab2(parent):
 
     # function list
     parent.funcList = listelement.GraphList(parent.tab2) # not ui element
-    parent.funcList.prepareFuncExample()
+    # parent.funcList.prepareFuncExample()
     parent.functionScroll = parent.funcList.list_widget
     parent.functionScroll.setObjectName(u"functionScroll")
     parent.tab2Layout.addWidget(parent.functionScroll, 0, 0, 6, 3) # occupy whole column
@@ -63,25 +64,16 @@ def setupTab2(parent):
     parent.keyboardGrid2.setObjectName(u"keyboardGrid2")
     populateKeyboardGrid2(parent)
 
-    # Dodanie callbacka do elementu listy z checkboxem
-    for i in range(1, parent.functionScroll.count()):
-        list_widget = parent.functionScroll
+    # Guzik służący do dodawania funkcji do listy funkcji
+    plusButton = parent.functionScroll.itemWidget(parent.functionScroll.item(0)).findChild(QPushButton)
 
-        checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
+    # Zmienna pod numer id funkcji
+    parent.function_number = 0
 
-        checkbox.stateChanged.connect(
-                lambda state: onFormulaSelected(state == 2)
-            )
+    # Obsługa dodawania funkcji do listy
+    plusButton.clicked.connect(lambda: onPlusClick(parent))
+
     pass
-
-# Funkcja na checkbox change
-def onFormulaSelected(checked, formula = None):
-    if checked:
-        # parent.graphDisplay.setPlot(sp.symbols('x'), formula)
-        print("Zaznaczony")
-    else:
-        # Opcjonalnie możemy dodać kod, aby usunąć funkcję z wykresu
-        pass
 
 def populateKeyboardGrid2(parent):
     "Populate keyboard grid in tab 2."
