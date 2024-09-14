@@ -19,7 +19,7 @@ from graphlayout import GraphLayout
 import listelement
 import sympy as sp
 import helpbuttons as helpBT
-from helpers import onPlusClick 
+from helpers import onPlusClick, drawActiveGraph 
 
 functionScroll = None
 """functionScroll is list of user-defined functions"""
@@ -65,13 +65,25 @@ def setupTab2(parent):
     populateKeyboardGrid2(parent)
 
     # Guzik służący do dodawania funkcji do listy funkcji
-    plusButton = parent.functionScroll.itemWidget(parent.functionScroll.item(0)).findChild(QPushButton)
-
+    plusButton = parent.functionScroll.itemWidget(parent.functionScroll.item(0)).findChildren(QPushButton)[0]
+    
+    # Guzik służący do rysowania aktualnej funkcji
+    drawActiveButton = parent.functionScroll.itemWidget(parent.functionScroll.item(0)).findChildren(QPushButton)[1]
+   
     # Zmienna pod numer id funkcji
     parent.function_number = 0
 
+    # Aktualnie wyświetlany wykres
+    parent.active_graph = None
+
     # Obsługa dodawania funkcji do listy
     plusButton.clicked.connect(lambda: onPlusClick(parent))
+
+    # Obsługa rysowania aktualnej funkcji
+    drawActiveButton.clicked.connect(lambda: drawActiveGraph(parent))
+
+    # # Przypisz callbacki do checkboxów po każdej modyfikacji listy funkcji
+    # setupCheckboxCallbacks(parent)  # Dodanie obsługi checkboxów
 
     pass
 

@@ -75,14 +75,18 @@ class GraphList: # misleading name
 
 	def createButton(self):
 		widget = QWidget()
+		layout = QHBoxLayout() # will contain one thing
 		button = QPushButton()
+		layout.addWidget(button)
+		button_2 = QPushButton()
 		if self.history_mode:
 			button.setText(u'Wyczyść historię')
 			button.clicked.connect(self.clearHistory)  # Połącz guzik z funkcją czyszczenia historii
 		else:
 			button.setIcon(QIcon("add_24dp.png"))
-		layout = QHBoxLayout() # will contain one thing
-		layout.addWidget(button)
+			button_2.setText(u'Rysuj wykres')
+			layout.addWidget(button_2)
+		
 		widget.setLayout(layout)
 		self.widgets.append(widget)
 		item = QListWidgetItem(self.list_widget)
@@ -104,7 +108,6 @@ class GraphList: # misleading name
 		for i in range(3):
 			widget = prepareWidgetHist(i, self)  # Przekazana instancja GraphList
 			self.addWidget(widget)
-
 
 	# dodaj element do listy
 	def addWidget(self, widget: QWidget):

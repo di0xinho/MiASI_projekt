@@ -1,8 +1,10 @@
 # W tym pliku będą mieścić się pomocnicze funkcje
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QCheckBox
 from calculationfunctions import calculate_expression
 from graphlayout import GraphLayout
 import listelement
+import sympy as sp
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QPushButton
 
@@ -63,7 +65,9 @@ def onPlusClick(parent):
     if(parent.functionScroll.count() < 7):
 
         # Tworzenie nowej funkcji - forma tekstowa
-        full_result = "f(x)" + " = " + "x^3"
+        # full_result = "f(x)" + " = " + "x^3"
+        x = sp.symbols('x')
+        full_result = sp.cos(x + 1)
 
         # Stworzenie nowego elementu do listy funkcji
         new_function_item = listelement.prepareWidgetFunc(parent.function_number, parent.funcList, full_result)
@@ -80,7 +84,7 @@ def onPlusClick(parent):
             checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
 
             checkbox.stateChanged.connect(
-                    lambda state: onFormulaSelected(state == 2) # state == 2 - oznacza to zaznaczenie checkboxa
+                    lambda state: onFormulaSelected(parent, state == 2, full_result) # state == 2 - oznacza to zaznaczenie checkboxa
                 )
     else:
         dlg = QMessageBox()
@@ -91,12 +95,51 @@ def onPlusClick(parent):
         button = dlg.exec()
 
 # Funkcja rysująca wykres w przypadku zaznaczenia checkboxa
-def onFormulaSelected(checked, formula = None):
+def onFormulaSelected(parent, checked, formula):
     if checked:
-        # parent.graphDisplay.setPlot(sp.symbols('x'), formula)
-        print("Zaznaczony")
-    else:
-        # Opcjonalnie możemy dodać kod, aby usunąć funkcję z wykresu
-        pass
+        parent.graphDisplay.ax.clear()
+        parent.graphDisplay.setPlot(sp.symbols('x'), formula)
 
+    checkboxes = []
+
+    for i in range(1, parent.functionScroll.count()):
+            checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
+            checkboxes.append(checkbox.checkState())
+
+def drawActiveGraph(parent):
+    if(parent.active_graph):
+        x = sp.symbols('x')
+        parent.graphDisplay.ax.clear()
+        parent.graphDisplay.setPlot(x, sp.cos(x + 5))
+    else:
+        dlg = QMessageBox()
+        dlg.setWindowTitle("Nie wybrano funkcji do rysowania")
+        dlg.setText("Należy zaznaczyć odpowiednią funkcję przed jej narysowaniem.")
+        dlg.setStandardButtons(QMessageBox.Ok)
+        dlg.setIcon(QMessageBox.Information)
+        button = dlg.exec()
+    
+    
+
+# def handleCheckboxStateChange(parent, checkbox):
+#     # Przechodzimy przez wszystkie checkboxy w functionScroll
+#     for i in range(1, parent.functionScroll.count()):
+#         other_checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
+#         print("Działam")
+#         # Jeśli inny checkbox jest zaznaczony i nie jest to checkbox, który właśnie zaznaczono
+#         if other_checkbox != checkbox and other_checkbox.checkState() == Qt.CheckState.Checked:
+#             # Odznaczamy pozostałe checkboxy
+#             other_checkbox.setCheckState(0)
+            
+
+# Funkcja do przypisania callbacków do checkboxów
+# def setupCheckboxCallbacks(parent):
+#     for i in range(1, parent.functionScroll.count()):
+#         checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
+
+#         # Każdy checkbox ma przypisany callback do zmiany swojego stanu
+#         checkbox.stateChanged.connect(lambda state, cb=checkbox: handleCheckboxStateChange(parent, cb))
+            
+   
+    
 
