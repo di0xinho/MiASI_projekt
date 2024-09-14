@@ -8,6 +8,7 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (QPushButton, QScrollArea, QHBoxLayout, QVBoxLayout,
 	QSizePolicy, QStatusBar, QWidget, QListWidgetItem, QListWidget, QCheckBox)
 from graphlayout import GraphLayout
+import sympy as sp
 
 # funexample = "f(x) = 38 * 5 / 7 * \pi * \cos(54) - 783314 + 4,5 * 10^{12} + 38 * 5 / 7 * \pi * \cos(54) - 783314 + 4,5 * 10^{12}"
 funexample = "x^2"
@@ -27,12 +28,16 @@ def prepareWidgetFunc(n, parent_list, result = funexample) -> QWidget:
 
     editButt = QPushButton()
     editButt.setIcon(QIcon("edit_24dp.png"))
+
     delButt = QPushButton()
     delButt.setIcon(QIcon("delete_24dp.png"))
 
     # Łączenie przycisku z metodą usuwania widgetu
     delButt.clicked.connect(lambda: parent_list.deleteWidget(widget))
 
+	# Łączenie przycisku z metodą do edycji formuły w widgecie
+    editButt.clicked.connect(lambda: parent_list.editWidget(widget, grLayout))
+	
     buttLayout = QVBoxLayout()
     buttLayout.addWidget(editButt)
     buttLayout.addWidget(delButt)
@@ -71,6 +76,7 @@ class GraphList: # misleading name
 		self.list_widget = QListWidget(parent)
 		self.history_mode=historyMode
 		self.widgets = []
+		self.current_graph = None
 		self.createButton()
 
 	def createButton(self):
@@ -120,9 +126,11 @@ class GraphList: # misleading name
 		self.list_widget.insertItem(insertAt, item)
 		self.list_widget.setItemWidget(item, widget)
 		pass
-	def editWidget(self):
+	def editWidget(self, widget: QWidget, graph_layout):
 		"when listing functions, there is an option to enter edit mode, to edit function"
-		print("Edytuje")
+		self.current_graph = graph_layout
+		return True
+			
 		pass
 	def deleteWidget(self, widget: QWidget):
 		"Usuwa wybrany widget z listy"

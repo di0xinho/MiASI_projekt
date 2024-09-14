@@ -19,7 +19,7 @@ from graphlayout import GraphLayout
 import listelement
 import sympy as sp
 import helpbuttons as helpBT
-from helpers import onPlusClick, drawActiveGraph 
+from helpers import onPlusClick, drawActiveGraph, setupButtons 
 
 functionScroll = None
 """functionScroll is list of user-defined functions"""
@@ -51,7 +51,7 @@ def setupTab2(parent):
     parent.tab2Layout.addWidget(parent.graphWidget, 0, 3, 4, 5)
     # GraphLayout showing function 📈
     parent.graphDisplay = GraphLayout(True, True)
-    parent.graphDisplay.plotExample()
+    # parent.graphDisplay.plotExample()
     parent.graphWidget.setLayout(parent.graphDisplay.getLayout())
 
     # keyboard grid widget 2. Special symbol keyboard
@@ -76,15 +76,17 @@ def setupTab2(parent):
     # Aktualnie wyświetlany wykres
     parent.active_graph = False
 
+    # Aktualny i poprzednio kliknięty guzik do edycji funkcji
+    parent.active_type_formula_button = None
+    parent.previous_type_formula_button = None
+
     # Obsługa dodawania funkcji do listy
     plusButton.clicked.connect(lambda: onPlusClick(parent))
 
     # Obsługa rysowania aktualnej funkcji
     drawActiveButton.clicked.connect(lambda: drawActiveGraph(parent))
 
-    # # Przypisz callbacki do checkboxów po każdej modyfikacji listy funkcji
-    # setupCheckboxCallbacks(parent)  # Dodanie obsługi checkboxów
-
+    setupButtons(parent, mode = 2)
     pass
 
 def populateKeyboardGrid2(parent):

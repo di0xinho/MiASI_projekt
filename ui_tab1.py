@@ -83,7 +83,7 @@ def setupTab1(parent, totalHeight = 0):
     parent.tab1Layout.addWidget(parent.historyScroll, 0, 5, 6, 3) # row, column, rowSpan, columnSpan. occupy whole column
 
     parent.current_expression = ""
-    setupButtons(parent)
+    setupButtons(parent, mode = 1)
 
     # Dodajemy obsługę kliknięcia przycisku "="
     parent.tab1Buttons['='].clicked.connect(lambda: onEqualClick(parent))
