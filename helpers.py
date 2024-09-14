@@ -96,16 +96,16 @@ def onPlusClick(parent):
 
 # Funkcja rysująca wykres w przypadku zaznaczenia checkboxa
 def onFormulaSelected(parent, checked, formula):
-    if checked:
-        parent.graphDisplay.ax.clear()
-        parent.graphDisplay.setPlot(sp.symbols('x'), formula)
-
     checkboxes = []
 
     for i in range(1, parent.functionScroll.count()):
             checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
             checkboxes.append(checkbox.checkState())
 
+    checkboxSelected = checkboxes.count(Qt.CheckState.Checked)
+    parent.active_graph = allowDrawingGraph(parent, checkboxSelected)
+
+# Metoda do rysowanie wybranej funkcji
 def drawActiveGraph(parent):
     if(parent.active_graph):
         x = sp.symbols('x')
@@ -114,12 +114,16 @@ def drawActiveGraph(parent):
     else:
         dlg = QMessageBox()
         dlg.setWindowTitle("Nie wybrano funkcji do rysowania")
-        dlg.setText("Należy zaznaczyć odpowiednią funkcję przed jej narysowaniem.")
+        dlg.setText("Aby narysować funkcję na wykresie należy zaznaczyć JEDNĄ formułę.")
         dlg.setStandardButtons(QMessageBox.Ok)
         dlg.setIcon(QMessageBox.Information)
         button = dlg.exec()
-    
-    
+
+# Funkcja sprawdzająca czy liczba zaznaczonych checkboxów jest równa 1 - w przeciwnym wypadku nie rysujemy funkcji
+def allowDrawingGraph(parent, checkboxSelected):
+    if(checkboxSelected != 1):
+        return False
+    return True
 
 # def handleCheckboxStateChange(parent, checkbox):
 #     # Przechodzimy przez wszystkie checkboxy w functionScroll

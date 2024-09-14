@@ -74,7 +74,7 @@ def setupTab2(parent):
     parent.function_number = 0
 
     # Aktualnie wyświetlany wykres
-    parent.active_graph = None
+    parent.active_graph = False
 
     # Obsługa dodawania funkcji do listy
     plusButton.clicked.connect(lambda: onPlusClick(parent))
