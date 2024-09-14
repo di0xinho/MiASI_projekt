@@ -13,7 +13,6 @@ def onEqualClick(parent):
     try:
         vars = {'x': 1, 'y': 1}
         result, latex_expression = calculate_expression(parent.current_expression, vars)
-        print(result)
         parent.answerFormula.typeFormula(result)
         
         # Rozwiązanie równania dodawane do historii, czyli format - "formuła matematyczna = wynik"
@@ -41,15 +40,37 @@ def setupButtons(parent, mode):
     if(mode == 1):
         for text, button in parent.tab1Buttons.items():
             if text not in ['=', 'C', 'AC']:
-                button.clicked.connect(lambda ch, t=text: addToExpression(parent, t))
+                button.clicked.connect(lambda ch, t=text: addToExpression(parent, t, parent.mathFormula, mode = 1))
     if(mode == 2):
         print("Działam w drugiej zakładce")
+        for text, button in parent.tab2Buttons.items():
+                button.clicked.connect(lambda ch, t=text: addToExpression(parent, t, parent.funcList.current_graph, mode = 2))
 
 # Dodawanie do wyrażenia odpowiednich formuł matematycznych
-def addToExpression(parent, text):
-    parent.current_expression += text
-    parent.mathFormula.typeFormula(parent.current_expression)
+def addToExpression(parent, text, mathFormulaField : GraphLayout, mode):
+    if mathFormulaField != None:
+        if (mode == 1):
+            parent.current_expression += text
+            mathFormulaField.typeFormula(parent.current_expression)
+        elif (mode == 2):
+            for expression in parent.current_expressions:
+                if expression[0] == mathFormulaField:
+                    expression += text
+                    mathFormulaField.typeFormula(expression)
+            
+            expression = ""
+            expression += text
+            mathFormulaField.typeFormula(expression)
+            parent.current_expressions.append([mathFormulaField, expression])
+    else:
+        dlg = QMessageBox()
+        dlg.setWindowTitle("Nie można użyć klawiatury")
+        dlg.setText("Klawiatura jest zablokowana. Aby móc z niej skorzystać musisz, aktywować pole do edycji danej funkcji.")
+        dlg.setStandardButtons(QMessageBox.Ok)
+        dlg.setIcon(QMessageBox.Information)
+        button = dlg.exec()
 
+   
 # Usuwanie ostatniego znaku z formuły matematycznej
 def removeLastCharacter(parent):
     # FIXME when deleting for example cos it removes only s XD
@@ -109,6 +130,7 @@ def getSelectedGraph(button, parent):
         parent.previous_type_formula_button.setStyleSheet("")
     
     if(parent.active_type_formula_button == button):
+        parent.funcList.current_graph = None
         parent.active_type_formula_button.setStyleSheet("")
         return
 

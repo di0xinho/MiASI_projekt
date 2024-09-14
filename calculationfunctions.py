@@ -16,7 +16,6 @@ def calculate_expression(raw_expression, vars):
     
     # Zamiana zmiennych na wartości
     expression = expression.subs(sym_vars)
-    print(expression)
     
     # Obliczanie wartości wyrażenia przez podstawienie wartości
     result = expression.evalf(subs = vars)

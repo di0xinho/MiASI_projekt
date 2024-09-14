@@ -86,6 +86,7 @@ def setupTab2(parent):
     # Obsługa rysowania aktualnej funkcji
     drawActiveButton.clicked.connect(lambda: drawActiveGraph(parent))
 
+    parent.current_expressions = []
     setupButtons(parent, mode = 2)
     pass
 

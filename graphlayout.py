@@ -48,6 +48,7 @@ class GraphLayout:
     def __init__(self, withToolbar = False, plotMode = False) -> None:
         self.withToolbar = withToolbar
         self.shortToolbar = True
+        self.currentFormula = ""  
         if plotMode:
             self.shortToolbar = False
             # connected 'xlim_changed' callback to GraphLayout.redrawPlot() in MainWindow. For some reason it has to be this way :/
@@ -77,6 +78,11 @@ class GraphLayout:
         # withToolbar = True
         # shortToolbar = True
         pass
+
+    # Getter dla formuły
+    def getFormula(self) -> str:
+        """Zwraca ostatnio ustawioną formułę."""
+        return self.currentFormula
 
     def __populateGraphLayout(self, parentLayout: QBoxLayout):
         """
@@ -134,8 +140,10 @@ class GraphLayout:
         displaying mathematical formulas written in LateX.
         \nalign text: 'left' / 'center' / 'right'
         """
+        
         latexText = mathFormula
         try:
+            
             self.ax.clear()
             self.ax.axis('off')
             x = 0.5
@@ -144,6 +152,11 @@ class GraphLayout:
             self.ax.text(x, 0.5, f"${latexText}$", size=fontSize, ha=alignText, va='center') # **kwargs: matplotlib.text.Text properties
             #self.ax.tight()
             self.draw()
+            self.currentFormula = latexText
+            if '=' in self.currentFormula:
+                self.currentFormula = self.currentFormula.split('=')[0].strip()
+            
+            print(self.currentFormula)
         except:
             print("Some exception occurred") # Mostly 'unknown format, when expects LateX text, but unable to parse. Ex \p instead of \pi
         pass
