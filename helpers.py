@@ -42,9 +42,10 @@ def setupButtons(parent, mode):
             if text not in ['=', 'C', 'AC']:
                 button.clicked.connect(lambda ch, t=text: addToExpression(parent, t, parent.mathFormula, mode = 1))
     if(mode == 2):
-        for text, button in parent.tab2Buttons.items():
-                if text not in ['C', 'AC']:
-                    button.clicked.connect(lambda ch, t=text: addToExpression(parent, t, parent.funcList, mode = 2))
+            # Jeśli tak - to klawiatura jest odblokowywana
+            for text, button in parent.tab2Buttons.items():
+                    if text not in ['C', 'AC']:
+                        button.clicked.connect(lambda ch, t=text: addToExpression(parent, t, parent.funcList, mode = 2))
 
 # Dodawanie do wyrażenia odpowiednich formuł matematycznych
 def addToExpression(parent, text, mathFormulaField: GraphLayout, mode):
@@ -55,35 +56,38 @@ def addToExpression(parent, text, mathFormulaField: GraphLayout, mode):
             parent.character_length.append(len(text))
             mathFormulaField.typeFormula(parent.current_expression)
         elif mode == 2:
-            # Tryb 2 - szukanie odpowiedniego pola w current_expressions
-            found = False
-            for expression in parent.current_expressions:
-                if expression[0] == mathFormulaField.current_graph:
-                    # Zaktualizowanie istniejącego wyrażenia
-                    expression[1] += text
-                    expression[3].append(len(text))
-                    mathFormulaField.current_graph.typeFormula(expression[1])
-                    found = True
-                    break
-            
-            if not found:
-                # Dodanie nowego wyrażenia, jeśli nie znaleziono odpowiedniego
-                new_expression = text
-                mathFormulaField.current_graph.typeFormula(new_expression)
-                checkbox = mathFormulaField.widgets[1].findChild(QCheckBox)
+            # Sprawdzamy, czy istnieje aktywny przycisk
+            if parent.active_type_formula_button is not None:
+                # Tryb 2 - szukanie odpowiedniego pola w current_expressions
+                found = False
+                for expression in parent.current_expressions:
+                    if expression[0] == mathFormulaField.current_graph:
+                        # Zaktualizowanie istniejącego wyrażenia
+                        expression[1] += text
+                        expression[3].append(len(text))
+                        mathFormulaField.current_graph.typeFormula(expression[1])
+                        found = True
+                        break
+                
+                if not found:
+                    # Dodanie nowego wyrażenia, jeśli nie znaleziono odpowiedniego
+                    new_expression = text
+                    mathFormulaField.current_graph.typeFormula(new_expression)
+                    checkbox = mathFormulaField.widgets[1].findChild(QCheckBox)
 
-                # Dodajemy do listy wyrażenie w postaci listy na której znajduje się:
-                # referencja do pola z formułą; tekst formuły (string); checkbox sprzężony z polem formuły; tablica z długością
-                # poszczególnych znaków wykorzystanych w formule
-                parent.current_expressions.append([mathFormulaField.current_graph, new_expression, checkbox,[]])
-    else:
-        # Dialog, gdy pole nie jest aktywne
-        dlg = QMessageBox()
-        dlg.setWindowTitle("Nie można użyć klawiatury")
-        dlg.setText("Klawiatura jest zablokowana. Aby móc z niej skorzystać, musisz aktywować pole do edycji danej funkcji.")
-        dlg.setStandardButtons(QMessageBox.Ok)
-        dlg.setIcon(QMessageBox.Information)
-        dlg.exec()
+                    # Dodajemy do listy wyrażenie w postaci listy na której znajduje się:
+                    # referencja do pola z formułą; tekst formuły (string); checkbox sprzężony z polem formuły; tablica z długością
+                    # poszczególnych znaków wykorzystanych w formule
+                    parent.current_expressions.append([mathFormulaField.current_graph, new_expression, checkbox,[len(text)]])
+            else:
+                # Dialog, gdy pole nie jest aktywne
+                dlg = QMessageBox()
+                dlg.setWindowTitle("Nie można użyć klawiatury")
+                dlg.setText("Klawiatura jest zablokowana. Aby móc z niej skorzystać, musisz aktywować pole do edycji danej funkcji.")
+                dlg.setStandardButtons(QMessageBox.Ok)
+                dlg.setIcon(QMessageBox.Information)
+                dlg.exec()
+    
 
 # Usuwanie ostatniego znaku z formuły matematycznej
 def removeLastCharacter(parent, mathFormulaField: GraphLayout, mode):
