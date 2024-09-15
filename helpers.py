@@ -80,17 +80,38 @@ def addToExpression(parent, text, mathFormulaField: GraphLayout, mode):
         dlg.exec()
 
 # Usuwanie ostatniego znaku z formuły matematycznej
-def removeLastCharacter(parent):
-    # FIXME when deleting for example cos it removes only s XD
-    if len(parent.current_expression) > 0:
-        parent.current_expression = parent.current_expression[:-1]
-        parent.mathFormula.typeFormula(parent.current_expression)
-
+def removeLastCharacter(parent, mathFormulaField: GraphLayout, mode):
+    if mathFormulaField is not None:
+        if mode == 1:
+            if len(parent.current_expression) > 0:
+                parent.current_expression = parent.current_expression[:-1]
+                mathFormulaField.typeFormula(parent.current_expression)
+        elif mode == 2:
+            for expression in parent.current_expressions:
+                if expression[0] == mathFormulaField:
+                    if len(expression[1]) > 0:
+                        expression[1] = expression[1][:-1]
+                        mathFormulaField.typeFormula(expression[1])
+                    break
+    
 # Usuwanie całego wyrażenia matematycznego
-def removeExpression(parent):
-    if len(parent.current_expression) != 0:
-        parent.current_expression = ""
-        parent.mathFormula.typeFormula(parent.current_expression)
+def removeExpression(parent, mathFormulaField: GraphLayout, mode):
+    if mathFormulaField is not None:
+        if mode == 1:
+            if len(parent.current_expression) > 0:
+                parent.current_expression = ""
+                mathFormulaField.typeFormula(parent.current_expression)
+        elif mode == 2:
+            for expression in parent.current_expressions:
+                if expression[0] == mathFormulaField:
+                    if len(expression[1]) > 0:
+                        expression[1] = ""
+                        mathFormulaField.typeFormula(expression[1])
+                    break
+
+    # if len(parent.current_expression) != 0:
+    #     parent.current_expression = ""
+    #     parent.mathFormula.typeFormula(parent.current_expression)
 
 # Dodawanie funkcji do listy funkcji
 def onPlusClick(parent):

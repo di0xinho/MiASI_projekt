@@ -19,7 +19,7 @@ from graphlayout import GraphLayout
 import listelement
 import sympy as sp
 import helpbuttons as helpBT
-from helpers import onPlusClick, drawActiveGraph, setupButtons 
+from helpers import onPlusClick, drawActiveGraph, setupButtons, removeExpression, removeLastCharacter 
 
 functionScroll = None
 """functionScroll is list of user-defined functions"""
@@ -93,6 +93,12 @@ def setupTab2(parent):
 
     # Umożliwienie wprowadzania formuł
     setupButtons(parent, mode = 2)
+
+    # Obsługa kliknięcia przycisku usuwającego ostatni znak z odpowiedniego pola
+    parent.tab2Buttons['C'].clicked.connect(lambda: removeLastCharacter(parent, parent.funcList.current_graph, mode = 2))
+    # Obsługa kliknięcia przycisku usuwającego całe wyrażenie matematyczne z odpowiedniego pola
+    parent.tab2Buttons['AC'].clicked.connect(lambda: removeExpression(parent, parent.funcList.current_graph, mode = 2))
+
     pass
 
 def populateKeyboardGrid2(parent):

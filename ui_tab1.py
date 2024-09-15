@@ -88,7 +88,7 @@ def setupTab1(parent, totalHeight = 0):
     # Dodajemy obsługę kliknięcia przycisku "="
     parent.tab1Buttons['='].clicked.connect(lambda: onEqualClick(parent))
     # Obsługa kliknięcia przycisku usuwającego ostatni znak
-    parent.tab1Buttons['C'].clicked.connect(lambda: removeLastCharacter(parent))
+    parent.tab1Buttons['C'].clicked.connect(lambda: removeLastCharacter(parent, parent.mathFormula, mode = 1))
     # Obsługa kliknięcia przycisku usuwającego całe wyrażenie matematyczne
     parent.tab1Buttons['AC'].clicked.connect(lambda: removeExpression(parent))
     # FIXME remove everything does not delete anything until something new is typed
