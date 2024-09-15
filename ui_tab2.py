@@ -76,8 +76,8 @@ def setupTab2(parent):
     # Zgoda na rysowanie wykresu: rysujemy gdy liczba zaznaczonych checkboxów to 1 - domyślnie nie ma zgody na rysowanie
     parent.active_graph = False
     
-    # Aktualnie zaznaczony graf do rysowania
-    parent.selected_graph = None
+    # Aktualnie zaznaczony checkbox - potrzebny do skojarzenia z funkcją, która będzie rysowana
+    parent.selected_checkbox = None
 
     # Aktualny i poprzednio kliknięty guzik do edycji funkcji
     parent.active_type_formula_button = None

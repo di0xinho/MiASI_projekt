@@ -44,7 +44,7 @@ def setupButtons(parent, mode):
     if(mode == 2):
         for text, button in parent.tab2Buttons.items():
                 if text not in ['C', 'AC']:
-                    button.clicked.connect(lambda ch, t=text: addToExpression(parent, t, parent.funcList.current_graph, mode = 2))
+                    button.clicked.connect(lambda ch, t=text: addToExpression(parent, t, parent.funcList, mode = 2))
 
 # Dodawanie do wyrażenia odpowiednich formuł matematycznych
 def addToExpression(parent, text, mathFormulaField: GraphLayout, mode):
@@ -57,18 +57,19 @@ def addToExpression(parent, text, mathFormulaField: GraphLayout, mode):
             # Tryb 2 - szukanie odpowiedniego pola w current_expressions
             found = False
             for expression in parent.current_expressions:
-                if expression[0] == mathFormulaField:
+                if expression[0] == mathFormulaField.current_graph:
                     # Zaktualizowanie istniejącego wyrażenia
                     expression[1] += text
-                    mathFormulaField.typeFormula(expression[1])
+                    mathFormulaField.current_graph.typeFormula(expression[1])
                     found = True
                     break
             
             if not found:
                 # Dodanie nowego wyrażenia, jeśli nie znaleziono odpowiedniego
                 new_expression = text
-                mathFormulaField.typeFormula(new_expression)
-                parent.current_expressions.append([mathFormulaField, new_expression])
+                mathFormulaField.current_graph.typeFormula(new_expression)
+                checkbox = mathFormulaField.widgets[1].findChild(QCheckBox)
+                parent.current_expressions.append([mathFormulaField.current_graph, new_expression, checkbox])
     else:
         # Dialog, gdy pole nie jest aktywne
         dlg = QMessageBox()
@@ -93,10 +94,10 @@ def removeExpression(parent):
 
 # Dodawanie funkcji do listy funkcji
 def onPlusClick(parent):
-    if(parent.functionScroll.count() < 7):
+    if(parent.functionScroll.count() < 11):
 
         # Tworzenie nowej funkcji - forma tekstowa
-        full_result = "f(x)" + " = "
+        full_result = "f(x)" + " = " + "Enter The Function"
         
         # Stworzenie nowego elementu do listy funkcji
         new_function_item = listelement.prepareWidgetFunc(parent.function_number, parent.funcList, full_result)
@@ -107,8 +108,10 @@ def onPlusClick(parent):
         # Dodanie wyrażenia i wyniku do listy funkcji
         parent.funcList.addWidget(new_function_item)
 
+        # Uchwyt pod guzik do edycji funkcji
         editButton = new_function_item.findChildren(QPushButton)[0]
 
+        # Dodanie sygnału do edycji pola z funkcją
         editButton.clicked.connect(lambda: getSelectedGraph(editButton, parent))
 
         # Dodanie callbacka do elementu listy z checkboxem
@@ -122,7 +125,7 @@ def onPlusClick(parent):
     else:
         dlg = QMessageBox()
         dlg.setWindowTitle("Przekroczono dozwolony limit funkcji")
-        dlg.setText("Możesz wprowadzić maksymalnie 6 funkcji.")
+        dlg.setText("Możesz wprowadzić maksymalnie 10 funkcji.")
         dlg.setStandardButtons(QMessageBox.Ok)
         dlg.setIcon(QMessageBox.Information)
         button = dlg.exec()
@@ -133,12 +136,12 @@ def getSelectedGraph(button, parent):
     if(parent.active_type_formula_button != None):
         parent.previous_type_formula_button = parent.active_type_formula_button
         parent.previous_type_formula_button.setStyleSheet("")
-    
+
     if(parent.active_type_formula_button == button):
         parent.funcList.current_graph = None
         parent.active_type_formula_button.setStyleSheet("")
         return
-
+    
     parent.active_type_formula_button = button
     current_graph = parent.funcList.current_graph
     button.setStyleSheet("background-color: #6D6D6D;")
@@ -148,23 +151,39 @@ def getSelectedGraph(button, parent):
 # Funkcja rysująca wykres w przypadku zaznaczenia checkboxa
 def onFormulaSelected(parent, checked, formula):
     checkboxes = []
+    checkboxes_id = []
     
     for i in range(1, parent.functionScroll.count()):
             checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
+            checkboxes_id.append(checkbox)
             checkboxes.append(checkbox.checkState())
-
+            
     checkboxSelected = checkboxes.count(Qt.CheckState.Checked)
 
     parent.active_graph = allowDrawingGraph(checkboxSelected)
+
+    if(parent.active_graph):
+        parent.selected_checkbox = findFirstCheckedCheckbox(checkboxes_id)
+
+# Funkcja sprawdzająca czy liczba zaznaczonych checkboxów jest równa 1 - w przeciwnym wypadku nie rysujemy funkcji
+def allowDrawingGraph(checkboxSelected):
+    if(checkboxSelected != 1):
+        return False
+    return True
 
 # Metoda do rysowanie wybranej funkcji
 def drawActiveGraph(parent):
     if(parent.active_graph):
 
+        expression_str = ""
+        
+        for expression in (parent.current_expressions):
+            if parent.selected_checkbox == expression[2]:
+                expression_str = expression[1]
+                break
+
         parent.graphDisplay.ax.clear()
           
-        expression_str = "sin(x + 1)"
-
         # Symboliczna zmienna 'x'
         sympy_var = sp.symbols('x')
         
@@ -188,12 +207,13 @@ def drawActiveGraph(parent):
         dlg.setStandardButtons(QMessageBox.Ok)
         dlg.setIcon(QMessageBox.Information)
         button = dlg.exec()
-    
-# Funkcja sprawdzająca czy liczba zaznaczonych checkboxów jest równa 1 - w przeciwnym wypadku nie rysujemy funkcji
-def allowDrawingGraph(checkboxSelected):
-    if(checkboxSelected != 1):
-        return False
-    return True
+
+# Funkcja zwraca pierwszy zaznaczony checkbox
+def findFirstCheckedCheckbox(checkbox_list):
+    for checkbox in checkbox_list:
+        if checkbox.checkState() == Qt.CheckState.Checked:
+            return checkbox
+    return None  # W przypadku, gdy żaden nie jest zaznaczony
             
    
     
