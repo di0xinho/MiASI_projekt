@@ -155,8 +155,6 @@ class GraphLayout:
             self.currentFormula = latexText
             if '=' in self.currentFormula:
                 self.currentFormula = self.currentFormula.split('=')[0].strip()
-            
-            print(self.currentFormula)
         except:
             print("Some exception occurred") # Mostly 'unknown format, when expects LateX text, but unable to parse. Ex \p instead of \pi
         pass

@@ -62,7 +62,6 @@ def addToExpression(parent, text, mathFormulaField: GraphLayout, mode):
                     expression[1] += text
                     mathFormulaField.typeFormula(expression[1])
                     found = True
-                    print(mathFormulaField)
                     break
             
             if not found:
@@ -97,10 +96,8 @@ def onPlusClick(parent):
     if(parent.functionScroll.count() < 7):
 
         # Tworzenie nowej funkcji - forma tekstowa
-        # full_result = "f(x)" + " = " + "x^3"
-        x = sp.symbols('x')
-        full_result = sp.cos(x + 1)
-
+        full_result = "f(x)" + " = "
+        
         # Stworzenie nowego elementu do listy funkcji
         new_function_item = listelement.prepareWidgetFunc(parent.function_number, parent.funcList, full_result)
 
@@ -118,7 +115,7 @@ def onPlusClick(parent):
         for i in range(1, parent.functionScroll.count()):
 
             checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
-
+           
             checkbox.stateChanged.connect(
                     lambda state: onFormulaSelected(parent, state == 2, full_result) # state == 2 - oznacza to zaznaczenie checkboxa
                 )
@@ -148,26 +145,42 @@ def getSelectedGraph(button, parent):
 
     return current_graph
 
-
 # Funkcja rysująca wykres w przypadku zaznaczenia checkboxa
 def onFormulaSelected(parent, checked, formula):
     checkboxes = []
     
     for i in range(1, parent.functionScroll.count()):
             checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
-            graph_layout = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QHBoxLayout).findChild(QVBoxLayout).findChild(GraphLayout)
             checkboxes.append(checkbox.checkState())
 
     checkboxSelected = checkboxes.count(Qt.CheckState.Checked)
+
     parent.active_graph = allowDrawingGraph(checkboxSelected)
 
 # Metoda do rysowanie wybranej funkcji
 def drawActiveGraph(parent):
     if(parent.active_graph):
-        print("Rysuję")
+
         parent.graphDisplay.ax.clear()
-        # x = sp.symbols('x')
-        # parent.graphDisplay.setPlot(x, "x^2")
+          
+        expression_str = "sin(x + 1)"
+
+        # Symboliczna zmienna 'x'
+        sympy_var = sp.symbols('x')
+        
+        try:
+            # Konwersja napisu na wyrażenie sympy
+            sympy_fun = sp.sympify(expression_str)
+            
+            # Rysowanie wykresu
+            parent.graphDisplay.setPlot(sympy_var, sympy_fun, color='green')
+        except Exception as e:
+            dlg = QMessageBox()
+            dlg.setWindowTitle("Błędnie wprowadzona formuła")
+            dlg.setText("Wprowadź poprawną formułę do odpowiedniego pola.")
+            dlg.setStandardButtons(QMessageBox.Ok)
+            dlg.setIcon(QMessageBox.Critical)
+            button = dlg.exec()
     else:
         dlg = QMessageBox()
         dlg.setWindowTitle("Nie wybrano funkcji do rysowania")
@@ -176,8 +189,6 @@ def drawActiveGraph(parent):
         dlg.setIcon(QMessageBox.Information)
         button = dlg.exec()
     
-   
-
 # Funkcja sprawdzająca czy liczba zaznaczonych checkboxów jest równa 1 - w przeciwnym wypadku nie rysujemy funkcji
 def allowDrawingGraph(checkboxSelected):
     if(checkboxSelected != 1):
