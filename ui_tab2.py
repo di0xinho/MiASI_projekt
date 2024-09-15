@@ -103,7 +103,7 @@ def populateKeyboardGrid2(parent):
     ] + helpBT.inserter(
         [f'{x}' for x in range(10)], # lista cyfr
         [(1, '/'), (4+1, '*'), (7+2, '+'), (10+3, '-')] # te liczby: przed jaką cyfrą wstawić element, to po +: ile już wstawiono. 10 nie ma, ale chodzi o to, że za 9
-    )
+    ) + ['x'] + ['C', 'AC']
 
     keyboardMaker = helpBT.KeboardHelp(parent.keyboardGrid2, parent.tab2Buttons)
     keyboardMaker.addButtons(functionKeyboard, 4)

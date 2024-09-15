@@ -1,6 +1,6 @@
 # W tym pliku będą mieścić się pomocnicze funkcje
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QCheckBox
+from PySide6.QtWidgets import QCheckBox, QLabel, QHBoxLayout, QVBoxLayout
 from calculationfunctions import calculate_expression
 from graphlayout import GraphLayout
 import listelement
@@ -42,35 +42,43 @@ def setupButtons(parent, mode):
             if text not in ['=', 'C', 'AC']:
                 button.clicked.connect(lambda ch, t=text: addToExpression(parent, t, parent.mathFormula, mode = 1))
     if(mode == 2):
-        print("Działam w drugiej zakładce")
         for text, button in parent.tab2Buttons.items():
-                button.clicked.connect(lambda ch, t=text: addToExpression(parent, t, parent.funcList.current_graph, mode = 2))
+                if text not in ['C', 'AC']:
+                    button.clicked.connect(lambda ch, t=text: addToExpression(parent, t, parent.funcList.current_graph, mode = 2))
 
 # Dodawanie do wyrażenia odpowiednich formuł matematycznych
-def addToExpression(parent, text, mathFormulaField : GraphLayout, mode):
-    if mathFormulaField != None:
-        if (mode == 1):
+def addToExpression(parent, text, mathFormulaField: GraphLayout, mode):
+    if mathFormulaField is not None:
+        if mode == 1:
+            # Tryb 1 - dodawanie do bieżącego wyrażenia
             parent.current_expression += text
             mathFormulaField.typeFormula(parent.current_expression)
-        elif (mode == 2):
+        elif mode == 2:
+            # Tryb 2 - szukanie odpowiedniego pola w current_expressions
+            found = False
             for expression in parent.current_expressions:
                 if expression[0] == mathFormulaField:
-                    expression += text
-                    mathFormulaField.typeFormula(expression)
+                    # Zaktualizowanie istniejącego wyrażenia
+                    expression[1] += text
+                    mathFormulaField.typeFormula(expression[1])
+                    found = True
+                    print(mathFormulaField)
+                    break
             
-            expression = ""
-            expression += text
-            mathFormulaField.typeFormula(expression)
-            parent.current_expressions.append([mathFormulaField, expression])
+            if not found:
+                # Dodanie nowego wyrażenia, jeśli nie znaleziono odpowiedniego
+                new_expression = text
+                mathFormulaField.typeFormula(new_expression)
+                parent.current_expressions.append([mathFormulaField, new_expression])
     else:
+        # Dialog, gdy pole nie jest aktywne
         dlg = QMessageBox()
         dlg.setWindowTitle("Nie można użyć klawiatury")
-        dlg.setText("Klawiatura jest zablokowana. Aby móc z niej skorzystać musisz, aktywować pole do edycji danej funkcji.")
+        dlg.setText("Klawiatura jest zablokowana. Aby móc z niej skorzystać, musisz aktywować pole do edycji danej funkcji.")
         dlg.setStandardButtons(QMessageBox.Ok)
         dlg.setIcon(QMessageBox.Information)
-        button = dlg.exec()
+        dlg.exec()
 
-   
 # Usuwanie ostatniego znaku z formuły matematycznej
 def removeLastCharacter(parent):
     # FIXME when deleting for example cos it removes only s XD
@@ -147,6 +155,7 @@ def onFormulaSelected(parent, checked, formula):
     
     for i in range(1, parent.functionScroll.count()):
             checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
+            graph_layout = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QHBoxLayout).findChild(QVBoxLayout).findChild(GraphLayout)
             checkboxes.append(checkbox.checkState())
 
     checkboxSelected = checkboxes.count(Qt.CheckState.Checked)
@@ -155,9 +164,10 @@ def onFormulaSelected(parent, checked, formula):
 # Metoda do rysowanie wybranej funkcji
 def drawActiveGraph(parent):
     if(parent.active_graph):
-        x = sp.symbols('x')
+        print("Rysuję")
         parent.graphDisplay.ax.clear()
-        parent.graphDisplay.setPlot(x, sp.cos(x + 5))
+        # x = sp.symbols('x')
+        # parent.graphDisplay.setPlot(x, "x^2")
     else:
         dlg = QMessageBox()
         dlg.setWindowTitle("Nie wybrano funkcji do rysowania")
@@ -165,31 +175,14 @@ def drawActiveGraph(parent):
         dlg.setStandardButtons(QMessageBox.Ok)
         dlg.setIcon(QMessageBox.Information)
         button = dlg.exec()
+    
+   
 
 # Funkcja sprawdzająca czy liczba zaznaczonych checkboxów jest równa 1 - w przeciwnym wypadku nie rysujemy funkcji
 def allowDrawingGraph(checkboxSelected):
     if(checkboxSelected != 1):
         return False
     return True
-
-# def handleCheckboxStateChange(parent, checkbox):
-#     # Przechodzimy przez wszystkie checkboxy w functionScroll
-#     for i in range(1, parent.functionScroll.count()):
-#         other_checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
-#         print("Działam")
-#         # Jeśli inny checkbox jest zaznaczony i nie jest to checkbox, który właśnie zaznaczono
-#         if other_checkbox != checkbox and other_checkbox.checkState() == Qt.CheckState.Checked:
-#             # Odznaczamy pozostałe checkboxy
-#             other_checkbox.setCheckState(0)
-            
-
-# Funkcja do przypisania callbacków do checkboxów
-# def setupCheckboxCallbacks(parent):
-#     for i in range(1, parent.functionScroll.count()):
-#         checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
-
-#         # Każdy checkbox ma przypisany callback do zmiany swojego stanu
-#         checkbox.stateChanged.connect(lambda state, cb=checkbox: handleCheckboxStateChange(parent, cb))
             
    
     
