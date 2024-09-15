@@ -63,22 +63,6 @@ class GraphLayout:
                 removeActionsFromToolbar(toolbar, formulaActionKeys)
         pass
 
-    def listMode(self):
-        # withToolbar = False
-        # smaller font!
-        # smaller size!
-        pass
-
-    def plotMode(self):
-        # withToolbar = True
-        # shortToolbar = False
-        pass
-
-    def mathMode(self):
-        # withToolbar = True
-        # shortToolbar = True
-        pass
-
     # Getter dla formuły
     def getFormula(self) -> str:
         """Zwraca ostatnio ustawioną formułę."""
@@ -94,7 +78,6 @@ class GraphLayout:
         This Layout must be QHBoxLayout or QVBoxLayout.
         """
         # graph
-        #self.graph = FigureCanvas(Figure(figsize=(5, 3))) # graph
         self.graph = FigureCanvas(Figure(figsize=(3, 1))) # graph
         self.graph.setObjectName(u"graph")
 
@@ -149,6 +132,9 @@ class GraphLayout:
             x = 0.5
             if toLeft:
                 x = -0.15
+            if not latexText:
+                self.setNormalText("", fontSize)
+                return
             self.ax.text(x, 0.5, f"${latexText}$", size=fontSize, ha=alignText, va='center') # **kwargs: matplotlib.text.Text properties
             #self.ax.tight()
             self.draw()
@@ -165,12 +151,11 @@ class GraphLayout:
         This can be used to set some hints.
         For setting math formulas use typeFormula
         """
-        #print('Change text')
         try:
             self.ax.clear()
             self.ax.axis('off')
             self.ax.text(0.5, 0.5, f"{text}", size=fontSize, ha='center', va='center') # **kwargs: matplotlib.text.Text properties
-            self.ax.tight()
+            #self.ax.tight()
             self.draw()
         except:
             #print("Some exception occurred")
@@ -188,14 +173,12 @@ class GraphLayout:
         self.setPlot(x, f)
         pass
 
-    # TODO can it draw multiple functions??
-
     def setPlot(self, sympy_var, sympy_fun, color='red'):
         'sympy_var - example: sp.symbols(\'x\'), sympy_fun - sympy function'
         # convert to numeric
         f_num = sp.lambdify(sympy_var, sympy_fun)
         self.f_num = f_num
-        self.f_col = color # TODO przypisywanie kolorów, bez tego przy przesuwaniu wykresu kolor się bardzo szybko zmienia
+        self.f_col = color
         x_vals = np.linspace(-10, 10, 10000) # begin view with x from -10 to 10 visible
         y_vals = f_num(x_vals)
         
