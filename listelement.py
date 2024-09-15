@@ -141,7 +141,7 @@ class GraphList: # misleading name
 				# Usuwamy element z listy
 				self.list_widget.takeItem(i)
 				self.widgets.remove(widget)  # Usuń widget z listy przechowywanych widgetów
-				widget.deleteLater()  # Opcjonalnie, jeśli chcesz usunąć widget całkowicie
+				# widget.deleteLater()  # Opcjonalnie, jeśli chcesz usunąć widget całkowicie
 				break
 			pass
 

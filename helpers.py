@@ -132,20 +132,26 @@ def onPlusClick(parent):
 
 # Funkcja do wprowadzenia formuły do pola w zakładce z wykresami
 def getSelectedGraph(button, parent):
-    
-    if(parent.active_type_formula_button != None):
-        parent.previous_type_formula_button = parent.active_type_formula_button
-        parent.previous_type_formula_button.setStyleSheet("")
+    # Sprawdzamy, czy istnieje aktywny przycisk
+    if parent.active_type_formula_button is not None:
+        # Upewniamy się, że przycisk nadal istnieje, używając sygnału `destroyed`
+        if parent.active_type_formula_button is not None:
+            parent.active_type_formula_button.setStyleSheet("")
 
-    if(parent.active_type_formula_button == button):
-        parent.funcList.current_graph = None
-        parent.active_type_formula_button.setStyleSheet("")
-        return
-    
-    parent.active_type_formula_button = button
+    # Jeśli kliknięty przycisk to ten sam, który jest już aktywny, usuwamy styl i dezaktywujemy
+    if parent.active_type_formula_button == button:
+        button.setStyleSheet("")  # Przywrócenie domyślnego stylu
+        parent.active_type_formula_button = None  # Żaden przycisk nie jest aktywny
+    else:
+        # Ustaw nowy aktywny przycisk
+        parent.active_type_formula_button = button
+        button.setStyleSheet("background-color: #6D6D6D;")  # Podświetlenie klikniętego przycisku
+        
+        # Ustawienie sygnału `destroyed`, który ustawi zmienną na None, jeśli obiekt zostanie usunięty
+        button.destroyed.connect(lambda: setattr(parent, 'active_type_formula_button', None))
+
+    # Funkcja zwraca aktualny wykres
     current_graph = parent.funcList.current_graph
-    button.setStyleSheet("background-color: #6D6D6D;")
-
     return current_graph
 
 # Funkcja rysująca wykres w przypadku zaznaczenia checkboxa
@@ -181,7 +187,10 @@ def drawActiveGraph(parent):
             if parent.selected_checkbox == expression[2]:
                 expression_str = expression[1]
                 break
+            
+            print(expression[1])
 
+        print(expression_str)
         parent.graphDisplay.ax.clear()
           
         # Symboliczna zmienna 'x'
