@@ -102,12 +102,12 @@ def populateKeyBoardGrid(parent):
     scientifcKeyboard = [
         '.', '(', ')', 
         'sin', 'cos', 'tan', 'π',
-        '^', '√', 'log', 'e',
-        'mod', 'abs'
+        '^', 'sqrt', 'log', 'e', 'abs',
+        'asin', 'acos', 'atan'
     ] + helpBT.inserter(
         [f'{x}' for x in range(10)], # lista cyfr
-        [(2 + 1, '/'), (5+2, '*'), (8+3, '+'), (11+2, '-')] # te liczby: przed jaką cyfrą wstawić element, to po +: ile już wstawiono. 10 nie ma, ale chodzi o to, że za 9
-    ) + ['='] + ['C', 'AC'] 
+        [(1, '/'), (4+1, '*'), (7+2, '+'), (10+3, '-')] # te liczby: przed jaką cyfrą wstawić element, to po +: ile już wstawiono. 10 nie ma, ale chodzi o to, że za 9
+    ) + ['C', 'AC'] + ['=']  
 
     keyboardMaker = helpBT.KeboardHelp(parent.keyboardGrid1, parent.tab1Buttons)
     keyboardMaker.addButtons(scientifcKeyboard, 4)

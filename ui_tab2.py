@@ -79,9 +79,8 @@ def setupTab2(parent):
     # Aktualnie zaznaczony checkbox - potrzebny do skojarzenia z funkcją, która będzie rysowana
     parent.selected_checkbox = None
 
-    # Aktualny i poprzednio kliknięty guzik do edycji funkcji
+    # Aktualnie kliknięty guzik do edycji funkcji
     parent.active_type_formula_button = None
-    parent.previous_type_formula_button = None
 
     # Obsługa dodawania funkcji do listy
     plusButton.clicked.connect(lambda: onPlusClick(parent))
@@ -89,7 +88,10 @@ def setupTab2(parent):
     # Obsługa rysowania aktualnej funkcji
     drawActiveButton.clicked.connect(lambda: drawActiveGraph(parent))
 
+    # Tablica, w której zapisywane są formuły zawarte w polach
     parent.current_expressions = []
+
+    # Umożliwienie wprowadzania formuł
     setupButtons(parent, mode = 2)
     pass
 
@@ -101,8 +103,8 @@ def populateKeyboardGrid2(parent):
     functionKeyboard = [
         '.', '(', ')', 
         'sin', 'cos', 'tan', 'π',
-        '^', '√', 'log', 'e',
-        'mod', 'abs'
+        '^', 'sqrt', 'log', 'e', 'abs',
+        'asin', 'acos', 'atan'
     ] + helpBT.inserter(
         [f'{x}' for x in range(10)], # lista cyfr
         [(1, '/'), (4+1, '*'), (7+2, '+'), (10+3, '-')] # te liczby: przed jaką cyfrą wstawić element, to po +: ile już wstawiono. 10 nie ma, ale chodzi o to, że za 9
@@ -111,5 +113,4 @@ def populateKeyboardGrid2(parent):
     keyboardMaker = helpBT.KeboardHelp(parent.keyboardGrid2, parent.tab2Buttons)
     keyboardMaker.addButtons(functionKeyboard, 4)
 
-    # Note: buttons can take more than one grid cell: keyboardGrid2.addWidget(parent.pushButton21, 0, 0, 2, 2)
     pass

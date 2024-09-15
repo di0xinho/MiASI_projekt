@@ -1,12 +1,12 @@
 # W tym pliku będą mieścić się pomocnicze funkcje
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QCheckBox, QLabel, QHBoxLayout, QVBoxLayout
+from PySide6.QtWidgets import QCheckBox
 from calculationfunctions import calculate_expression
 from graphlayout import GraphLayout
 import listelement
 import sympy as sp
 
-from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QPushButton
+from PySide6.QtWidgets import QMessageBox, QPushButton
 
 # Funkcja obsługująca kliknięcie przycisku "="
 def onEqualClick(parent):
@@ -117,10 +117,12 @@ def onPlusClick(parent):
         # Dodanie callbacka do elementu listy z checkboxem
         for i in range(1, parent.functionScroll.count()):
 
+            # Bierzemy każdy checkbox z listy
             checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
-           
+
+            # Każdy checkbox łączymy z sygnałem
             checkbox.stateChanged.connect(
-                    lambda state: onFormulaSelected(parent, state == 2, full_result) # state == 2 - oznacza to zaznaczenie checkboxa
+                    lambda state: onFormulaSelected(parent) 
                 )
     else:
         dlg = QMessageBox()
@@ -155,21 +157,26 @@ def getSelectedGraph(button, parent):
     return current_graph
 
 # Funkcja rysująca wykres w przypadku zaznaczenia checkboxa
-def onFormulaSelected(parent, checked, formula):
+def onFormulaSelected(parent):
+    # Listy pod wartości stanu checkboxa oraz referencji do danego checkboxa
+    checkboxes_check_states = []
     checkboxes = []
-    checkboxes_id = []
     
+    # Pętla, w której dodajemy każdego checkboxa z listy
     for i in range(1, parent.functionScroll.count()):
             checkbox = parent.functionScroll.itemWidget(parent.functionScroll.item(i)).findChild(QCheckBox)
-            checkboxes_id.append(checkbox)
-            checkboxes.append(checkbox.checkState())
+            checkboxes.append(checkbox)
+            checkboxes_check_states.append(checkbox.checkState())
             
-    checkboxSelected = checkboxes.count(Qt.CheckState.Checked)
+    # Liczymy ilość zaznaczonych checkboxów
+    checkboxSelected = checkboxes_check_states.count(Qt.CheckState.Checked)
 
+    # Jeśli liczba checkboxów jest równa 1 to możemy rysować, w przeciwnym wypadku nie możemy
     parent.active_graph = allowDrawingGraph(checkboxSelected)
 
+    # Jeśli możemy rysować to szukamy zaznaczonego checkboxa, aby móc potem sprzężyć go z odpowiednią funkcją do rysowania
     if(parent.active_graph):
-        parent.selected_checkbox = findFirstCheckedCheckbox(checkboxes_id)
+        parent.selected_checkbox = findFirstCheckedCheckbox(checkboxes)
 
 # Funkcja sprawdzająca czy liczba zaznaczonych checkboxów jest równa 1 - w przeciwnym wypadku nie rysujemy funkcji
 def allowDrawingGraph(checkboxSelected):
@@ -188,9 +195,6 @@ def drawActiveGraph(parent):
                 expression_str = expression[1]
                 break
             
-            print(expression[1])
-
-        print(expression_str)
         parent.graphDisplay.ax.clear()
           
         # Symboliczna zmienna 'x'
@@ -201,7 +205,7 @@ def drawActiveGraph(parent):
             sympy_fun = sp.sympify(expression_str)
             
             # Rysowanie wykresu
-            parent.graphDisplay.setPlot(sympy_var, sympy_fun, color='green')
+            parent.graphDisplay.setPlot(sympy_var, sympy_fun, color='red')
         except Exception as e:
             dlg = QMessageBox()
             dlg.setWindowTitle("Błędnie wprowadzona formuła")
