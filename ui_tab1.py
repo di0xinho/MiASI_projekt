@@ -82,7 +82,13 @@ def setupTab1(parent, totalHeight = 0):
     parent.historyScroll.setObjectName(u"historyScroll")
     parent.tab1Layout.addWidget(parent.historyScroll, 0, 5, 6, 3) # row, column, rowSpan, columnSpan. occupy whole column
 
+    # Aktualnie wyświetlana formuła
     parent.current_expression = ""
+
+    # Długości znaków z których składa się dana formuła
+    parent.character_length = []
+
+    # Umożliwienie wprowadzania formuł
     setupButtons(parent, mode = 1)
 
     # Dodajemy obsługę kliknięcia przycisku "="
@@ -90,7 +96,7 @@ def setupTab1(parent, totalHeight = 0):
     # Obsługa kliknięcia przycisku usuwającego ostatni znak
     parent.tab1Buttons['C'].clicked.connect(lambda: removeLastCharacter(parent, parent.mathFormula, mode = 1))
     # Obsługa kliknięcia przycisku usuwającego całe wyrażenie matematyczne
-    parent.tab1Buttons['AC'].clicked.connect(lambda: removeExpression(parent))
+    parent.tab1Buttons['AC'].clicked.connect(lambda: removeExpression(parent, parent.mathFormula, mode = 1))
     # FIXME remove everything does not delete anything until something new is typed
 
     pass

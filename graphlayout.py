@@ -207,27 +207,6 @@ class GraphLayout:
         self.draw()
         pass
 
-    def setMultiplePlots(self, sympy_var, sympy_funcs, colors=None):
-        """Rysowanie wielu funkcji na jednym wykresie."""
-        self.ax.clear()  # Czyścimy wykres przed rysowaniem
-
-        if colors is None:
-            colors = ['red', 'blue', 'green', 'purple', 'orange']
-
-        # Rysowanie każdej funkcji z osobna
-        for i, sympy_fun in enumerate(sympy_funcs):
-            f_num = sp.lambdify(sympy_var, sympy_fun)
-            x_vals = np.linspace(-10, 10, 1000)
-            y_vals = f_num(x_vals)
-            self.ax.plot(x_vals, y_vals, color=colors[i % len(colors)])
-        
-        self.ax.set_xlabel('x')
-        self.ax.set_ylabel('f(x)')
-        self.ax.set_title('Wykres funkcji')
-        self.draw()
-
-
-
     def redrawPlot(self):
         "when graph view is moved it has to be redrawn"
         if self.f_num is None:

@@ -25,7 +25,7 @@ def onEqualClick(parent):
         parent.histList.addWidget(new_history_item)
         
         # Usuwanie formuły matematycznej z pola wprowadzania wyrażenia po dodaniu do historii 
-        removeExpression(parent)
+        removeExpression(parent, parent.mathFormula, mode = 1)
 
     except Exception as e:
         dlg = QMessageBox()
@@ -52,6 +52,7 @@ def addToExpression(parent, text, mathFormulaField: GraphLayout, mode):
         if mode == 1:
             # Tryb 1 - dodawanie do bieżącego wyrażenia
             parent.current_expression += text
+            parent.character_length.append(len(text))
             mathFormulaField.typeFormula(parent.current_expression)
         elif mode == 2:
             # Tryb 2 - szukanie odpowiedniego pola w current_expressions
@@ -60,6 +61,7 @@ def addToExpression(parent, text, mathFormulaField: GraphLayout, mode):
                 if expression[0] == mathFormulaField.current_graph:
                     # Zaktualizowanie istniejącego wyrażenia
                     expression[1] += text
+                    expression[3].append(len(text))
                     mathFormulaField.current_graph.typeFormula(expression[1])
                     found = True
                     break
@@ -69,7 +71,11 @@ def addToExpression(parent, text, mathFormulaField: GraphLayout, mode):
                 new_expression = text
                 mathFormulaField.current_graph.typeFormula(new_expression)
                 checkbox = mathFormulaField.widgets[1].findChild(QCheckBox)
-                parent.current_expressions.append([mathFormulaField.current_graph, new_expression, checkbox])
+
+                # Dodajemy do listy wyrażenie w postaci listy na której znajduje się:
+                # referencja do pola z formułą; tekst formuły (string); checkbox sprzężony z polem formuły; tablica z długością
+                # poszczególnych znaków wykorzystanych w formule
+                parent.current_expressions.append([mathFormulaField.current_graph, new_expression, checkbox,[]])
     else:
         # Dialog, gdy pole nie jest aktywne
         dlg = QMessageBox()
@@ -82,39 +88,44 @@ def addToExpression(parent, text, mathFormulaField: GraphLayout, mode):
 # Usuwanie ostatniego znaku z formuły matematycznej
 def removeLastCharacter(parent, mathFormulaField: GraphLayout, mode):
     if mathFormulaField is not None:
-        if mode == 1:
+        if mode == 1: # Dla pierwszej zakładki
             if len(parent.current_expression) > 0:
-                parent.current_expression = parent.current_expression[:-1]
+                # Bierzemy ilość znaków z końca tablicy
+                chars_to_remove = parent.character_length.pop()
+                # Usuwamy tyle znaków ile wzieliśmy
+                parent.current_expression = parent.current_expression[:-chars_to_remove]
+                # Zapisujemy w polu rozwiązania
                 mathFormulaField.typeFormula(parent.current_expression)
-        elif mode == 2:
+        elif mode == 2: # Dla drugiej zakładki
+            # Analogicznie postępujemy dla drugiej zakładki
             for expression in parent.current_expressions:
                 if expression[0] == mathFormulaField:
                     if len(expression[1]) > 0:
-                        expression[1] = expression[1][:-1]
+                        chars_to_remove = expression[3].pop()
+                        expression[1] = expression[1][:-chars_to_remove]
                         mathFormulaField.typeFormula(expression[1])
                     break
     
 # Usuwanie całego wyrażenia matematycznego
 def removeExpression(parent, mathFormulaField: GraphLayout, mode):
     if mathFormulaField is not None:
-        if mode == 1:
+        if mode == 1: # Dla pierwszej zakładki
             if len(parent.current_expression) > 0:
                 parent.current_expression = ""
+                parent.character_length = []
                 mathFormulaField.typeFormula(parent.current_expression)
-        elif mode == 2:
+        elif mode == 2: # Dla drugiej zakładki
             for expression in parent.current_expressions:
                 if expression[0] == mathFormulaField:
                     if len(expression[1]) > 0:
                         expression[1] = ""
+                        expression[3] = []
                         mathFormulaField.typeFormula(expression[1])
                     break
 
-    # if len(parent.current_expression) != 0:
-    #     parent.current_expression = ""
-    #     parent.mathFormula.typeFormula(parent.current_expression)
-
 # Dodawanie funkcji do listy funkcji
 def onPlusClick(parent):
+    # Ograniczę ilość funkcji do max 10
     if(parent.functionScroll.count() < 11):
 
         # Tworzenie nowej funkcji - forma tekstowa
@@ -209,13 +220,18 @@ def allowDrawingGraph(checkboxSelected):
 def drawActiveGraph(parent):
     if(parent.active_graph):
 
+        # Wyrażenie w formie napisu
         expression_str = ""
         
+        # Szukamy aktualnie zaznaczonego checkboxa w tablicy z wyrażeniami
         for expression in (parent.current_expressions):
-            if parent.selected_checkbox == expression[2]:
+            # W przypadku, gdy dopasowaliśmy do siebie dwa checkboxy, to będzie oznaczać, że mamy do czynienia z odpowiednim
+            # wyrażeniem zapisanym w polu pod indeksem 1
+            if parent.selected_checkbox == expression[2]: 
                 expression_str = expression[1]
                 break
-            
+
+        # Czyścimy oś    
         parent.graphDisplay.ax.clear()
           
         # Symboliczna zmienna 'x'
