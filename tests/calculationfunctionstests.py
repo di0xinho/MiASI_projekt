@@ -1,4 +1,10 @@
 import unittest
+import sys
+import os
+
+# Dodajemy katalog główny do ścieżki
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from calculationfunctions import calculate_expression, simplify_to_polynomial
 
 # Klasa z testami jednostkowymi sprawdzające działanie funkcji 
